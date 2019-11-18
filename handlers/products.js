@@ -55,7 +55,7 @@ const replace = (req, res) => {
     if(er == 0){
         mProducts.replace(req.params.id, data)
         .then(() => {
-            res.status(201).send('Replaced');
+            res.status(204).send();
         })
         .catch(err => {
             res.status(500).send(err);
@@ -69,7 +69,7 @@ const update = (req, res) => {
     var data = req.body;
     mProducts.replace(req.params.id, data)
     .then(() => {
-        res.status(201).send('Updated');
+        res.status(204).send();
     })
     .catch(err => {
         res.status(500).send(err);
@@ -79,7 +79,7 @@ const update = (req, res) => {
 const remove = (req, res) => {
     mProducts.remove(req.params.id)
     .then(() => {
-        res.status(201).send('Removed');
+        res.status(204).send();
     })
     .catch(err => {
         res.status(500).send(err);
