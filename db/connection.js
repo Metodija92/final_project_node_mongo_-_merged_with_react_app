@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
+const uri = "mongodb+srv://{username}:{password}@{host}/{dbname}?retryWrites=true&w=majority"
 
-const init = () => {
-    mongoose.connect('mongodb+srv://dev:<pass>@cluster0-l74pg.mongodb.net/products?retryWrites=true&w=majority', 
+const init = (config) => {
+    mongoose.connect(parseCString(config), 
     {useNewUrlParser: true, useUnifiedTopology: true})
     .then(res => {
         console.log(res);
@@ -10,6 +11,14 @@ const init = () => {
     .catch(err => {
         console.log(err);
     });
+}
+
+const parseCString = (config) => {
+    let cs = uri.replace('{username}', config.username);
+     cs = cs.replace('{password}', config.password);
+     cs = cs.replace('{host}', config.host);
+     cs = cs.replace('{dbname}', config.dbname);
+     return cs;
 }
 
 module.exports = {
