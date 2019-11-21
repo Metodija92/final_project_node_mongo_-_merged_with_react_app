@@ -6,7 +6,8 @@ const init = (config) => {
     mongoose.connect(parseCString(config), 
     {useNewUrlParser: true, useUnifiedTopology: true})
     .then(res => {
-        console.log(res);
+        console.log('Connected with DB');
+        // console.log(res);
     })
     .catch(err => {
         console.log(err);

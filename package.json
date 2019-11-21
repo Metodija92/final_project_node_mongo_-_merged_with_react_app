@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": ""
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Metodija92/FinalProject_node-mongo#readme",
   "dependencies": {
     "express": "4.17.1",
-    "mongoose": "5.7.8"
+    "mongoose": "5.7.8",
+    "node-input-validator": "4.1.0"
   }
 }

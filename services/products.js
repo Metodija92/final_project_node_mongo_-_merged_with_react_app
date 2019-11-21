@@ -1,13 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const config = require('./config/index.js');
-const DBConn = require('./db/connection');
-const products = require('./handlers/products');
+const config = require('../config/index.js');
+const DBConn = require('../db/connection');
+const products = require('../handlers/products');
 
-let c = config.getConfig("db");
+DBConn.init(config.getConfig("db"));
 
-DBConn.init(c);
 const api = express();
 api.use(bodyParser.json());
 
