@@ -81,11 +81,23 @@ const remove = (id) => {
     });
 };
 
+const filterQuery = (param1, param2) => {
+    return new Promise((success, fail) => {
+        Product.find({purchaseDate:{$gte: param1, $lte: param2}}, (err, data) => {
+            if(err){
+                return fail(err);
+            }
+            return success(data);
+        });
+    });
+};
+
 module.exports = {
     getAll,
     getOne,
     save,
     replace,
     update,
-    remove
+    remove,
+    filterQuery
 }

@@ -86,11 +86,23 @@ const remove = (req, res) => {
     });
 }
 
+const filterQuery = (req, res) => {
+    mProducts.filterQuery(req.params.from, req.params.to)
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(500).send(err);
+        console.log(err);
+    });
+}
+
 module.exports = {
     getAll,
     getOne,
     save,
     replace,
     update,
-    remove
+    remove,
+    filterQuery
 }
