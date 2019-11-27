@@ -24,7 +24,19 @@ const createUser = (data) => {
     });
 }
 
+const getUserPasswordByEmail = (email) => {
+    return new Promise ((success, fail) => {
+        User.find({email: email}, (err, data) => {
+            if(err){
+                return fail(err);
+            }
+            return success(data[0]);
+        });
+    });
+}
+
 
 module.exports = {
-    createUser
+    createUser,
+    getUserPasswordByEmail
 }
