@@ -8,15 +8,16 @@ const Product = mongoose.model(
             productDescription: String,
             purchaseDate: Date,
             productPrice: Number,
+            user_id: String,
             _created : Date, 
             _modified : Date
         }
     )
 );
 
-const getAll = () => {
+const getAll = (userID) => {
     return new Promise((success, fail) => {
-        Product.find({}, (err, data) => {
+        Product.find({user_id: userID}, (err, data) => {
             if(err){
                 return fail(err);
             }
@@ -25,9 +26,9 @@ const getAll = () => {
     });
 };
 
-const getOne = (id) => {
+const getOne = (id, userID) => {
     return new Promise((success, fail) => {
-        Product.findById(id, (err, data) => {
+        Product.find({_id: id, user_id: userID}, (err, data) => {
             if(err){
                 return fail(err);
             }
@@ -81,9 +82,9 @@ const remove = (id) => {
     });
 };
 
-const filterQuery = (param1, param2) => {
+const filterQuery = (userID, param1, param2) => {
     return new Promise((success, fail) => {
-        Product.find({purchaseDate:{$gte: param1, $lte: param2}}, (err, data) => {
+        Product.find({user_id: userID, purchaseDate:{$gte: param1, $lte: param2}}, (err, data) => {
             if(err){
                 return fail(err);
             }

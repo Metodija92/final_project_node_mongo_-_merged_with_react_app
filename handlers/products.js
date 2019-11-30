@@ -1,7 +1,7 @@
 const mProducts = require('../models/products')
 
 const getAll = (req, res) => {
-    mProducts.getAll()
+    mProducts.getAll(req.user.id)
     .then(data => {
         res.status(200).send(data);
     })
@@ -11,7 +11,7 @@ const getAll = (req, res) => {
 }
 
 const getOne = (req, res) => {
-    mProducts.getOne(req.params.id)
+    mProducts.getOne(req.params.id, req.user.id)
     .then(data => {
         res.status(200).send(data);
     })
@@ -31,7 +31,7 @@ const save = (req, res) => {
     
 
     if(er == 0){
-        mProducts.save(data)
+        mProducts.save({...data, user_id: req.user.id})
         .then(() => {
             res.status(201).send('Created');
         })
@@ -87,7 +87,7 @@ const remove = (req, res) => {
 }
 
 const filterQuery = (req, res) => {
-    mProducts.filterQuery(req.params.from, req.params.to)
+    mProducts.filterQuery(req.user.id, req.params.from, req.params.to)
     .then(data => {
         res.status(200).send(data);
     })
