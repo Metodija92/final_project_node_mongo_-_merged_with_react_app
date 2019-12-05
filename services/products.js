@@ -29,7 +29,6 @@ api.post('/api/v1/products', products.save);
 api.put('/api/v1/products/:id', products.replace);
 api.patch('/api/v1/products/:id', products.update);
 api.delete('/api/v1/products/:id', products.remove);
-api.get('/api/v1/products/:from/:to', products.filterQuery);
 
 api.listen(8080, err => {
     if(err){

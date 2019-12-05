@@ -1,7 +1,31 @@
 const mProducts = require('../models/products')
 
 const getAll = (req, res) => {
-    mProducts.getAll(req.user.id)
+    let q = {user_id: req.user.id};
+    let sort = {};
+
+    if(req.query.date_from != undefined) {
+        if(q.purchaseDate == undefined){
+            q.purchaseDate = {};
+        }
+        q.purchaseDate.$gte = new Date(Number(req.query.date_from));
+    }
+
+    if(req.query.date_to != undefined) {
+        if(q.purchaseDate == undefined){
+            q.purchaseDate = {};
+        }
+        q.purchaseDate.$lte = new Date(Number(req.query.date_to));
+    }
+
+    if(req.query.sort != undefined) {
+        let sortable = ['purchaseDate', 'productPrice'];
+        let sq = req.query.sort.split(':');
+        if(sortable.indexOf(sq[0]) > -1){
+            sort[sq[0]] = sq[1] == 'desc' ? -1 : 1;
+        }
+    }
+    mProducts.getAll(q, sort)
     .then(data => {
         res.status(200).send(data);
     })
@@ -86,23 +110,11 @@ const remove = (req, res) => {
     });
 }
 
-const filterQuery = (req, res) => {
-    mProducts.filterQuery(req.user.id, req.params.from, req.params.to)
-    .then(data => {
-        res.status(200).send(data);
-    })
-    .catch(err => {
-        res.status(500).send(err);
-        console.log(err);
-    });
-}
-
 module.exports = {
     getAll,
     getOne,
     save,
     replace,
     update,
-    remove,
-    filterQuery
+    remove
 }
