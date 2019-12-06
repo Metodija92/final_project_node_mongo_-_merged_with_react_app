@@ -61,6 +61,16 @@ const login = (req, res) => {
     });
 }
 
+const userInfo = (req, res) => {
+    mUsers.getUserPasswordByEmail(req.params.email)
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(500).send(err);
+    });
+}
+
 const renew = (req, res) => {
     return res.status(200).send(req.user);
 }
@@ -84,5 +94,6 @@ module.exports = {
     renew,
     resetLink,
     resetPassword,
-    changePassword
+    changePassword,
+    userInfo
 }

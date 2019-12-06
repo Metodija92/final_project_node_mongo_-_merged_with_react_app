@@ -29,6 +29,7 @@ api.use(
 
 api.post('/api/v1/register', auth.register);
 api.post('/api/v1/login', auth.login);
+api.get('/api/v1/user/:email', auth.userInfo);
 api.get('/api/v1/renew', auth.renew);
 api.post('/api/v1/reset-link', auth.resetLink);
 api.post('/api/v1/reset-password', auth.resetPassword);
