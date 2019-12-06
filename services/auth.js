@@ -4,18 +4,20 @@ const config = require('../config/index.js');
 const DBCon = require('../db/connection');
 const auth = require('../handlers/auth');
 const jwt = require('express-jwt');
+const cors = require('cors');
 
 DBCon.init(config.getConfig('db'));
 
 var api = express();
 api.use(bodyParser.json());
-api.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
-    res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");
-    next();
-});
+api.use(cors());
+// api.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.setHeader("Access-Control-Allow-Credentials", "true");
+//     res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+//     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");
+//     next();
+// });
 api.use(
     jwt({ 
         secret: config.getConfig('jwt').key
