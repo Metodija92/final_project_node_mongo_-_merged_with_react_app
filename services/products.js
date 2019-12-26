@@ -25,9 +25,9 @@ api.use(
     })
 );
 
-api.get('/api/v1/products', products.getAll);
+api.get('/api/v1/products/', products.getAll);
 api.get('/api/v1/products/:id', products.getOne);
-api.post('/api/v1/products', products.save);
+api.post('/api/v1/products/', products.save);
 api.put('/api/v1/products/:id', products.replace);
 api.patch('/api/v1/products/:id', products.update);
 api.delete('/api/v1/products/:id', products.remove);

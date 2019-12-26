@@ -23,17 +23,17 @@ api.use(
         secret: config.getConfig('jwt').key
     })
     .unless({
-        path: ['/api/v1/register', '/api/v1/login']
+        path: ['/api/v1/auth/register', '/api/v1/auth/login']
     })
 );
 
-api.post('/api/v1/register', auth.register);
-api.post('/api/v1/login', auth.login);
-api.get('/api/v1/user/:email', auth.userInfo);
-api.get('/api/v1/renew', auth.renew);
-api.post('/api/v1/reset-link', auth.resetLink);
-api.post('/api/v1/reset-password', auth.resetPassword);
-api.post('/api/v1/change-password', auth.changePassword);
+api.post('/api/v1/auth/register', auth.register);
+api.post('/api/v1/auth/login', auth.login);
+api.get('/api/v1/auth/user/:email', auth.userInfo);
+api.get('/api/v1/auth/renew', auth.renew);
+api.post('/api/v1/auth/reset-link', auth.resetLink);
+api.post('/api/v1/auth/reset-password', auth.resetPassword);
+api.post('/api/v1/auth/change-password', auth.changePassword);
 
 
 api.listen(8081, err => {
