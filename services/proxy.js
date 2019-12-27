@@ -13,7 +13,8 @@ api.all('/api/v1/auth/*', (req, res) => {
 });
 
 api.all('/*', (req, res) => {
-    res.status(404).send('Not found!');
+    // res.status(404).send('Not found!');
+    apiProxy.web(req, res, {target: 'http://localhost:8082'});
 });
 
 api.listen(process.env.PORT, err => {

@@ -1,0 +1,36 @@
+#products {
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+#products-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+#products-header h1 {
+    font-size: 22px;
+    font-weight: bold;
+    Color: #000000;
+}
+
+#select-box-container label {
+    color: #575757;
+}
+
+#new-btn {
+    width: 150px;
+    height: 40px;
+    font-size:15px;
+    color: #fff;
+    background: #576574;
+    box-shadow:  0px 0px 16px rgba(0, 0, 0, 0.17);
+    border-radius:  5px;
+    padding: 0 10px;
+    position: fixed;
+    right: 15px;
+    bottom: 20px;
+    outline: 0;
+}

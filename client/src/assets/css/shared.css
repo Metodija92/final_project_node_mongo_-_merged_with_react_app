@@ -1,0 +1,209 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    font-family: 'Roboto', sans-serif;
+    background:  #E5EDF5;
+
+}
+
+#root {
+    width: 100%;
+    height: 100%; 
+}
+
+/* LOG IN / REGISTER / ADD NEW PRODUCT WINDOW START */
+
+.box-container {
+    background: #fff;
+    padding: 25px 35px;
+    border-radius:  5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: stretch;
+    margin-top: auto;
+}
+
+.input-container{
+    margin: 15px 0px;
+}
+
+.text-field-label {
+    font-size: 18px;
+    color:  #8D8D8D; 
+}
+
+.text-field-input {
+    width: 100%;
+    height: 30px;
+    background: #fff;
+    border: 2px solid;
+    border-color:  #C6C6C6;
+    border-radius:  5px;
+    margin-top: 15px;
+    /* box-sizing: border-box; izgleda gi prai polinjata pomali, proveri na stariot 
+     proekt kaj sto ima pateka samo za <NewProduct />  
+    padding-left: 5px; 
+    Provereno ili se mn mali ili stanuvaat pogolemi vo desno*/
+}
+
+.primary-button {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    background:  #1DD1A1 ;
+    height: 50px;
+    box-shadow:  0px 0px 16px rgba(0, 0, 0, 0.17);
+    border-radius:  5px;
+}
+
+.primary-button.long {
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.aditional-info {
+    color: #8D8D8D;
+    margin-bottom: auto;
+}
+
+.register-login {
+    color: #8D8D8D;
+    border: none;
+    background: transparent;
+    outline-color: transparent;
+    text-decoration: underline;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* LOG IN / REGISTER / ADD NEW PRODUCT WINDOW  END */
+
+
+/* PRODUCTS PAGE START */
+
+.general-products-container{
+    width: 100%;
+    /* height: 100%; >>> Za da moze da bide izvaden NavBarot i da ne ja butka sodrzinata nadole */ 
+}
+
+    /* NAVBAR */
+.navbar-container {
+    width: 100%;
+    background: #fff;
+    /* position: sticky; sticky funkcionira do kaj sto mu e kontentot, zaso navbarov ne e vo drug div tera kolku mu e nego goleminata i se gubi, za da bide do kraj se mora da bide vo eden skros golem div */
+    /* So sticky overlayot za del product ne go opfakja cel ekran */
+    top: 0px;
+}
+
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px 20px;
+}
+
+.navbar-button {
+    width: 120px;
+    font-size: 15px;
+    background: transparent;
+    border: 2px solid;
+    border-color: #576574;
+    border-radius: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-right: 15px;
+    outline: 0;
+}
+
+/* .navbar-button:active {
+    color: #1DD1A1;
+    border-color: #1DD1A1;
+} */
+.active {
+    color: #1DD1A1;
+    border-color: #1DD1A1;
+}
+
+
+.profile-container {
+    display: flex;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.user-name {
+    font-size: 18px;
+    text-decoration: none;
+    color: #4d4d4d;
+    margin: auto 0 auto 15px;
+}
+
+
+    /* SELECT BOX */
+.select-box {
+    height: 35px;
+    width: 125px;
+    background: #fff;
+    border: 2px solid;
+    border-color: #C6C6C6;
+    border-radius: 5px;
+    margin-left: 15px;
+    outline: 0;
+}
+
+    /* TABLE */
+.products-table{
+    table-layout: fixed;
+    width: 100%;
+    border-collapse:separate;
+    border-spacing:0 5px;
+}
+
+.products-table thead {
+    font-size: 16px;
+    color: #404040;
+}
+
+.products-table thead th {
+    border-bottom: 1px solid;
+    border-color: #707070;
+    padding: 15px;
+    text-align: start;
+}
+
+tbody:before { 
+/* ZA DA IMA MALCE PROSTOR MEGJU THEAD I TBODY DODAVA EDEN PRAZEN CELL*/
+    content:"@";
+    display:block;
+    line-height:1em;
+    background: #E5EDF5;
+    text-indent:-99999px;
+}
+
+.products-table tbody {
+    font-size: 16px;
+    color: #575757;
+    background: #fff;
+}
+
+
+.products-table tbody tr td {
+    padding: 15px;
+}
+
+.edit-del-btn{
+    font-size: 16px;
+    border: none;
+    background: transparent;
+    outline-color: #1DD1A1;
+}
+  
