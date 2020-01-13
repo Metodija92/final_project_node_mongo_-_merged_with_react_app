@@ -9,9 +9,9 @@ const singleReducer = combineReducers({
 // Create an epmty store object
 const store = createStore(
     singleReducer,
-    applyMiddleware(logger)
+    // applyMiddleware(logger)
 )
 
-console.log(store.getState())
+// console.log(store.getState())
 
 export default store

@@ -50,7 +50,7 @@ class Register extends React.Component {
             axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/register', {
                 first_name: this.state.first_name,
                 last_name: this.state.last_name,
-                email: this.state.email,
+                email: this.state.email.toLowerCase(),
                 password: this.state.password,
                 birthday: this.state.birthday,
                 telephone: this.state.telephone,
@@ -58,7 +58,6 @@ class Register extends React.Component {
                 _created: new Date(),
             })
             .then(res => {
-                console.log(res)
                 axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
                     email: this.state.email,
                     password: this.state.password
@@ -68,7 +67,6 @@ class Register extends React.Component {
                     localStorage.setItem('name', this.state.first_name);
                     localStorage.setItem('lastName', this.state.last_name);
                     this.setState({redirect: true});
-                    // this.props.history.push('/products')
                 })
                 .catch(err=>{
                     console.log(err)
@@ -98,7 +96,7 @@ class Register extends React.Component {
                             </p>
                             <p className="input-container">
                                 <label className="text-field-label" >E-mail</label> <br/>
-                                <input type="text" className="text-field-input" id='email' onChange={this.saveInputValue}/>
+                                <input type="email" className="text-field-input" id='email' onChange={this.saveInputValue}/>
                             </p>
                             <p className="input-container">
                                 <label className="text-field-label" >Password</label> <br/>
