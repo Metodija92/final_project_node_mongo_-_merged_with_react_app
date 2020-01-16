@@ -9,7 +9,7 @@ const Alert = (props) => {
         axios.delete(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${props.id}`,
         { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
         .then(res => {
-        console.log(res);
+        // console.log(res);
         props.deleteAlert()
         props.productDeleted()
         })

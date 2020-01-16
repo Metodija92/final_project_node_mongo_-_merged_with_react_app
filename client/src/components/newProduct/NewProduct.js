@@ -48,7 +48,7 @@ class NewProduct extends React.Component {
                 _created: new Date()
             }, { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
             .then(res => {
-            console.log(res);
+            // console.log(res);
             })
             .catch(err => {
             console.log(err);
@@ -76,7 +76,7 @@ class NewProduct extends React.Component {
                 _modified: new Date()
             }, { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
             .then(res => {
-            console.log(res);
+            // console.log(res);
             })
             .catch(err => {
             console.log(err);

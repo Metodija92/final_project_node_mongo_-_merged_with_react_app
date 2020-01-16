@@ -69,7 +69,7 @@ class Login extends React.Component {
 
                 </div>
             </React.Fragment>
-            )
+        )
     }
     
 }
