@@ -58,19 +58,21 @@ class Register extends React.Component {
                 _created: new Date(),
             })
             .then(res => {
-                axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
-                    email: this.state.email,
-                    password: this.state.password
-                })
-                .then(res=>{
-                    localStorage.setItem('jwt', res.data.jwt);
-                    localStorage.setItem('name', this.state.first_name);
-                    localStorage.setItem('lastName', this.state.last_name);
-                    this.setState({redirect: true});
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
+                setTimeout(() => {
+                    axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
+                        email: this.state.email,
+                        password: this.state.password
+                    })
+                    .then(res=>{
+                        localStorage.setItem('jwt', res.data.jwt);
+                        localStorage.setItem('name', this.state.first_name);
+                        localStorage.setItem('lastName', this.state.last_name);
+                        this.setState({redirect: true});
+                    })
+                    .catch(err=>{
+                        throw new Error(err);
+                    });
+                }, 1000);
             })
             .catch(err=>{
                 console.log(err)
