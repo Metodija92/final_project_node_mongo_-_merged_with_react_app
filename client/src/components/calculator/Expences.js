@@ -48,7 +48,6 @@ class Expences extends React.Component {
         { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
         .then(res=>{
             store.dispatch(getProducts(res.data))
-            // store.dispatch(sort('LATEST_PURCHASE'))
             // this.setState({didUpdate: this.props.didUpdate})
             console.log('didMount')
         })
@@ -65,38 +64,31 @@ class Expences extends React.Component {
                 { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
                 .then(res=>{
                     store.dispatch(getProducts(res.data))
-                    console.log('didUpdate')
+                    // console.log('didUpdate')
                 })
                 .catch(err=>{
                     console.log(err)
                 })
             } else if(myDate.length === 4){
-                // let fromTargetDate = `${myDate}-01-01T00:00:00.000Z`
                 let fromTargetDate = new Date(`${myDate}-01-01 00:00:00.000`).getTime();
-                // let toTargetDate = `${myDate}-12-31T23:59:59.000Z`
                 let toTargetDate = new Date(`${myDate}-12-31 23:59:59.000`).getTime();
                 axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?date_from=${fromTargetDate}&date_to=${toTargetDate}&sort=purchaseDate:desc`,
                 { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
                 .then(res=>{
                     store.dispatch(getProducts(res.data))
-                    // store.dispatch(sort('LATEST_PURCHASE'))
                     console.log('didUpdate')
                 })
                 .catch(err=>{
                     console.log(err)
                 })
             } else if (myDate.length === 7){
-                // let fromTargetDate = `${myDate}-01T00:00:00.000Z`
                 let fromTargetDate = new Date(`${myDate}-01 00:00:00.000`).getTime();
-                // let toTargetDate = `${myDate}-31T23:59:59.000Z`
                 let toTargetDate = new Date(`${myDate}-31 23:59:59.000`).getTime();
                 axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?date_from=${fromTargetDate}&date_to=${toTargetDate}&sort=purchaseDate:desc`,
                 { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
                 .then(res=>{
-                    // console.log(res.data)
                     store.dispatch(getProducts(res.data))
-                    // store.dispatch(sort('LATEST_PURCHASE'))
-                    console.log('didUpdate')
+                    // console.log('didUpdate')
                 })
                 .catch(err=>{
                     console.log(err)
@@ -123,7 +115,7 @@ class Expences extends React.Component {
 
         return (
             <React.Fragment>
-                {/* *****Narednava linija ja renderira <Navbar/> a toggle mu treba za da se dodade klasa na kopceto PExpences da bide zeleno*****  */}
+                {/* *****Narednava linija ja renderira <Navbar/> a toggle mu treba za da se dodade klasa na kopceto Expences da bide zeleno*****  */}
                 <this.props.component toggle={false}/>
                 <div id="expenses">
                     <div id="expenses-header-one">

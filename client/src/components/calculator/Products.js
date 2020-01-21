@@ -108,8 +108,7 @@ class Products extends React.Component {
                             </select>
                         </p>
                     </div>
-                    <Table showProducts={this.state.showProducts} 
-                            deleteAlert={this.deleteAlert}/>
+                    <Table showProducts={this.state.showProducts} deleteAlert={this.deleteAlert}/>
                 </div>
                 <Link to='/newproduct' ><button id="new-btn" onClick={()=>{store.dispatch(changeNewToEditProduct(false))}}>NEW PRODUCT</button></Link>
             </React.Fragment>

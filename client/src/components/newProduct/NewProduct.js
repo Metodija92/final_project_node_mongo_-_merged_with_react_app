@@ -38,7 +38,6 @@ class NewProduct extends React.Component {
             this.state.productDescription != null &&
             this.state.purchaseDate != null &&
             this.state.productPrice != null) {
-            
             axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/products/', {
                 productName: this.state.productName,
                 productType: this.state.productType,
@@ -48,10 +47,10 @@ class NewProduct extends React.Component {
                 _created: new Date()
             }, { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
             .then(res => {
-            // console.log(res);
+                // console.log(res);
             })
             .catch(err => {
-            console.log(err);
+                console.log(err);
             });
             store.dispatch(didUpdate(true))
         }
@@ -76,11 +75,11 @@ class NewProduct extends React.Component {
                 _modified: new Date()
             }, { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
             .then(res => {
-            // console.log(res);
+                // console.log(res);
             })
             .catch(err => {
-            console.log(err);
-            alert('All the fields must be filled out in order to edit your product succesfuly!')
+                console.log(err);
+                alert('All the fields must be filled out in order to edit your product succesfuly!')
             });
             store.dispatch(didUpdate(true))
             store.dispatch(changeNewToEditProduct(false))
