@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios'
 import { connect } from 'react-redux'
 // eslint-disable-next-line
 import { BrowserRouter as Router, Link } from 'react-router-dom'
@@ -8,7 +7,7 @@ import Table from '../table/Table'
 import Alert from './Alert'
 
 import store from '../../redux/store'
-import {getProducts, didUpdate, changeNewToEditProduct} from '../../redux/actions/productAction'
+import {changeNewToEditProduct, getProductsCall, getProductsSorted} from '../../redux/actions/productAction'
 import '../../assets/css/Products.css'
 
 
@@ -18,19 +17,22 @@ class Products extends React.Component {
         this.state = {
             showProducts: true,
             showAlert: false,
-            didUpdate: false,
-            sort: null
+            didUpdate: this.props.didUpdate,
+            sort: "purchaseDate:desc"
         }
     }
 
+    // Show modal - Delete Alter
     deleteAlert = () => {
         this.setState({showAlert: !this.state.showAlert})
     }
 
+    // Updates component after deleting product, sent as prop so <Alert />
     productDeleted = () => {
         this.setState({didUpdate: true})
     }
 
+    // Triggers sort order onClick in select box
     filterProduct = (event) => {
         this.setState({
             didUpdate: true,
@@ -39,51 +41,17 @@ class Products extends React.Component {
     }
 
     componentDidMount(){
-        axios.get("https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=purchaseDate:desc", 
-        { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-        .then(res=>{
-            store.dispatch(getProducts(res.data))
-            this.setState({didUpdate: this.props.didUpdate})
-            console.log('didMount')
-        })
-        .catch(err=>{
-            console.log(err)
-        })
+        store.dispatch(getProductsCall())
     }
 
-    // ***Trigira posle brishenje na proizvod i posle edit / create new***
+    // ***Triggers after deleting, editing or creating new product***
     componentDidUpdate() {
         if(this.state.didUpdate === true) {
-            if(this.state.sort === null) {
-                axios.get("https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=purchaseDate:desc",
-                { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-                .then(res=>{
-                    store.dispatch(getProducts(res.data))
-                    store.dispatch(didUpdate(false))
-                    console.log('didUpdate')
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-                this.setState({didUpdate: false})
-            } else if(this.state.sort != null) {
-                axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=${this.state.sort}`,
-                { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-                .then(res=>{
-                    store.dispatch(getProducts(res.data))
-                    store.dispatch(didUpdate(false))
-                    console.log('didUpdate')
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-                this.setState({
-                    didUpdate: false,
-                    sort: null
-                })
-            } else {
-                console.log('Error kaj Products - compDidUpdate!')
-            }
+            store.dispatch(getProductsSorted(this.state.sort));
+            this.setState({
+                didUpdate: false,
+                sort: "purchaseDate:desc"
+            })
         }
     }
 

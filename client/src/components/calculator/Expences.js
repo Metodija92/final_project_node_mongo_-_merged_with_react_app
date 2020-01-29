@@ -1,10 +1,9 @@
 import React from 'react'
 import Table from '../table/Table'
-import axios from 'axios'
 import {connect} from 'react-redux'
 
 import store from '../../redux/store'
-import {getProducts} from '../../redux/actions/productAction'
+import {getProductsCall, getExpencesFiltered} from '../../redux/actions/productAction'
 import '../../assets/css/Expences.css'
 
 
@@ -44,55 +43,22 @@ class Expences extends React.Component {
     }
 
     componentDidMount(){
-        axios.get("https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=purchaseDate:desc", 
-        { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-        .then(res=>{
-            store.dispatch(getProducts(res.data))
-            // this.setState({didUpdate: this.props.didUpdate})
-            console.log('didMount')
-        })
-        .catch(err=>{
-            console.log(err)
-        })
+        store.dispatch(getProductsCall());
     }
 
     componentDidUpdate(){
         if(this.state.didUpdate){
             let myDate = this.state.filterValue
             if(myDate === 'total'){
-                axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=purchaseDate:desc`,
-                { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-                .then(res=>{
-                    store.dispatch(getProducts(res.data))
-                    // console.log('didUpdate')
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
+                store.dispatch(getProductsCall());
             } else if(myDate.length === 4){
                 let fromTargetDate = new Date(`${myDate}-01-01 00:00:00.000`).getTime();
                 let toTargetDate = new Date(`${myDate}-12-31 23:59:59.000`).getTime();
-                axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?date_from=${fromTargetDate}&date_to=${toTargetDate}&sort=purchaseDate:desc`,
-                { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-                .then(res=>{
-                    store.dispatch(getProducts(res.data))
-                    console.log('didUpdate')
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
+                store.dispatch(getExpencesFiltered(fromTargetDate, toTargetDate))
             } else if (myDate.length === 7){
                 let fromTargetDate = new Date(`${myDate}-01 00:00:00.000`).getTime();
                 let toTargetDate = new Date(`${myDate}-31 23:59:59.000`).getTime();
-                axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?date_from=${fromTargetDate}&date_to=${toTargetDate}&sort=purchaseDate:desc`,
-                { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-                .then(res=>{
-                    store.dispatch(getProducts(res.data))
-                    // console.log('didUpdate')
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
+                store.dispatch(getExpencesFiltered(fromTargetDate, toTargetDate))
             }
             this.setState({didUpdate: false})
         }
