@@ -65,17 +65,14 @@ export const getProductsSorted = (sortQuery) => {
         axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=${sortQuery}`,
         { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
         .then(res=>{
-            // store.dispatch(getProducts(res.data))
             dispatch({
                 type: 'GET_PRODUCTS',
                 payload: res.data
             });
-            // store.dispatch(didUpdate(false))
             dispatch({
                 type: 'DID_UPDATE',
                 payload: false
             });
-            console.log('did update')
         })
         .catch(err=>{
             dispatch(getAllPostsFailed());
@@ -102,6 +99,76 @@ export const getExpencesFiltered = (from, to) => {
     }
 }
 
+export const createNewProduct = (name, type, description, date, price) => {
+    return async (dispatch) => {
+        dispatch(createOrEditStarted());
+        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/products/', {
+            productName: name,
+            productType: type,
+            productDescription: description,
+            purchaseDate: date,
+            productPrice: price,
+            _created: new Date()
+        }, { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
+        .then(res => {
+            // console.log(res);
+            dispatch(createOrEditSuccess());
+            dispatch({
+                type: 'DID_UPDATE',
+                state: true
+            });
+        })
+        .catch(err => {
+            dispatch(createOrEditFailed());
+            console.log(err);
+        });
+    }
+}
+
+export const editExistingProduct = (id, name, type, description, date, price) => {
+    return async (dispatch) => {
+        dispatch(createOrEditStarted());
+        axios.put(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${id}`, {
+            productName: name,
+            productType: type,
+            productDescription: description,
+            purchaseDate: date,
+            productPrice: price,
+            _modified: new Date()
+        }, { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
+        .then(res => {
+            // console.log(res);
+            dispatch(createOrEditSuccess());
+            dispatch({
+                type: 'CHANGE_NEW_TO_EDIT',
+                state: false
+            });
+            dispatch({
+                type: 'DID_UPDATE',
+                state: true
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            dispatch(createOrEditFailed());
+            alert('All the fields must be filled out in order to edit your product succesfuly!')
+        });
+    }
+}
+
+export const deleteProduct = (id) => {
+    return async () => {
+        axios.delete(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${id}`,
+        { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
+        .then(res => {
+            // console.log(res);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+}
+
 const getAllPostsStarted = () => {
     return {
         type: 'GET_ALL_POSTS_STARTED'
@@ -111,5 +178,23 @@ const getAllPostsStarted = () => {
 const getAllPostsFailed = () => {
     return {
         type: 'GET_ALL_POSTS_FAILED'
+    }
+}
+
+const createOrEditStarted = () => {
+    return {
+        type: 'CREATE_OR_EDIT_PRODUCT_STARTED'
+    }
+}
+
+const createOrEditFailed = () => {
+    return {
+        type: 'CREATE_OR_EDIT_PRODUCT_FAILED'
+    }
+}
+
+const createOrEditSuccess = () => {
+    return {
+        type: 'CREATE_OR_EDIT_PRODUCT_SUCCESS'
     }
 }

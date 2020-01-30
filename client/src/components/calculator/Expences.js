@@ -19,6 +19,7 @@ class Expences extends React.Component {
         }
     }
 
+    // Show yearly filter
     showYearly = () => {
         this.setState({
             showYearly: true,
@@ -27,6 +28,7 @@ class Expences extends React.Component {
         })
     }
 
+    // Show montly filter
     showMonhtly = () => {
         this.setState({
             showYearly: false,
@@ -35,6 +37,7 @@ class Expences extends React.Component {
         })
     }
 
+    // Get filter value
     searchFilter = (event) => {
         this.setState({
             filterValue: event.target.value,
@@ -51,11 +54,12 @@ class Expences extends React.Component {
             let myDate = this.state.filterValue
             if(myDate === 'total'){
                 store.dispatch(getProductsCall());
-            } else if(myDate.length === 4){
+            } 
+            else if(myDate.length === 4){ // Filter by year
                 let fromTargetDate = new Date(`${myDate}-01-01 00:00:00.000`).getTime();
                 let toTargetDate = new Date(`${myDate}-12-31 23:59:59.000`).getTime();
                 store.dispatch(getExpencesFiltered(fromTargetDate, toTargetDate))
-            } else if (myDate.length === 7){
+            } else if (myDate.length === 7){ // Filter by month
                 let fromTargetDate = new Date(`${myDate}-01 00:00:00.000`).getTime();
                 let toTargetDate = new Date(`${myDate}-31 23:59:59.000`).getTime();
                 store.dispatch(getExpencesFiltered(fromTargetDate, toTargetDate))
@@ -70,7 +74,7 @@ class Expences extends React.Component {
         for (let i = 0; i < this.props.products.length; i++) {
             totalSpent += this.props.products[i].productPrice
         }
-        // Za options na selectbox od Year
+        // Options for selectbox - Year
         let today = new Date();
         let year = today.getFullYear();
         let selectOptions= []

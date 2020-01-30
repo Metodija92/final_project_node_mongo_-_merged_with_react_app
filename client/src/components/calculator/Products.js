@@ -33,7 +33,7 @@ class Products extends React.Component {
     }
 
     // Triggers sort order onClick in select box
-    filterProduct = (event) => {
+    sortProduct = (event) => {
         this.setState({
             didUpdate: true,
             sort: event.target.value
@@ -42,6 +42,10 @@ class Products extends React.Component {
 
     componentDidMount(){
         store.dispatch(getProductsCall())
+        // Give time to Mongo to write data before going in update(Mongo returns OK while data in Quee to be written)
+        setTimeout(() => {
+            this.setState({didUpdate: this.props.didUpdate})
+        }, 500)
     }
 
     // ***Triggers after deleting, editing or creating new product***
@@ -52,6 +56,7 @@ class Products extends React.Component {
                 didUpdate: false,
                 sort: "purchaseDate:desc"
             })
+            console.log('Did update')
         }
     }
 
@@ -68,7 +73,7 @@ class Products extends React.Component {
                         <h1>Products</h1>
                         <p id="select-box-container">
                             <label htmlFor="purchase-filter">Sort by:</label>
-                            <select name="purchase-filter" className="select-box" onChange={this.filterProduct}>
+                            <select name="purchase-filter" className="select-box" onChange={this.sortProduct}>
                                 <option value="purchaseDate:desc">Latest Purchase</option>
                                 <option value="productPrice:desc">Highest Price</option>
                                 <option value="productPrice:asc">Lowest Price</option>
