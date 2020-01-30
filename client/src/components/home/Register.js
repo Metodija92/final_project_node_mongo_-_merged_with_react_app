@@ -1,6 +1,9 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import axios from 'axios'
+import { connect } from 'react-redux'
+import store from '../../redux/store'
+import {userRegister, createUserSuccess} from '../../redux/actions/productAction'
+
 import '../../assets/css/Register.css'
 
 class Register extends React.Component {
@@ -38,45 +41,26 @@ class Register extends React.Component {
             this.state.country === null ){
                 event.preventDefault()
                 alert('Please fill out all the fields')
-        } 
-        else if (this.state.first_name != null &&
-            this.state.last_name != null &&
-            this.state.email != null &&
-            this.state.password != null &&
-            this.state.birthday != null &&
-            this.state.telephone != null &&
-            this.state.country != null) {
+        } else  {
             event.preventDefault()
-            axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/register', {
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                email: this.state.email.toLowerCase(),
-                password: this.state.password,
-                birthday: this.state.birthday,
-                telephone: this.state.telephone,
-                country: this.state.country,
-                _created: new Date(),
-            })
-            .then(res => {
-                setTimeout(() => {
-                    axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
-                        email: this.state.email,
-                        password: this.state.password
-                    })
-                    .then(res=>{
-                        localStorage.setItem('jwt', res.data.jwt);
-                        localStorage.setItem('name', this.state.first_name);
-                        localStorage.setItem('lastName', this.state.last_name);
-                        this.setState({redirect: true});
-                    })
-                    .catch(err=>{
-                        throw new Error(err);
-                    });
-                }, 1000);
-            })
-            .catch(err=>{
-                console.log(err)
-            });
+            store.dispatch(userRegister(
+                this.state.first_name,
+                this.state.last_name,
+                this.state.email.toLowerCase(),
+                this.state.password,
+                this.state.birthday,
+                this.state.telephone,
+                this.state.country)
+            )
+            setTimeout(()=> {
+                console.log(localStorage.getItem('jwt'))
+                let jwt = localStorage.getItem('jwt');
+                if(jwt != null) {
+                    store.dispatch(createUserSuccess())
+                    this.setState({redirect: true})
+                }
+                console.log(this.state.redirect)
+            }, 3000)
         }
     }
 
@@ -84,6 +68,7 @@ class Register extends React.Component {
         return (
             <React.Fragment>
                 {this.renderRedirect()}
+                {this.props.createUserStarted ? <h1>CREATING USER</h1> : null}
                 <div id="register">
         
                     <div className="box-container" id="register-container">
@@ -132,4 +117,10 @@ class Register extends React.Component {
     
 }
 
-export default Register
+function mapStateToProps (state) {
+    return {
+        createUserStarted: state.productsReducer.createUserStarted
+    }
+}
+
+export default connect(mapStateToProps)(Register)

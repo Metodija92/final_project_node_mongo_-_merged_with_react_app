@@ -1,6 +1,8 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import axios from 'axios'
+import store from '../../redux/store'
+import {userLoginIn} from '../../redux/actions/productAction'
+
 import '../../assets/css/Login.css'
 
 class Login extends React.Component {
@@ -13,10 +15,12 @@ class Login extends React.Component {
         }
     }
 
+    // Get input values
     saveInputValue = (event) => {
         this.setState({[event.target.id]: event.target.value})
     }
 
+    // Redirects user to Products page if authentication is successfull
     renderRedirect = () => {
         if (this.state.redirect) {
             return <Redirect to='/products' />
@@ -25,19 +29,13 @@ class Login extends React.Component {
 
     logIn = (event) => {
         event.preventDefault();
-        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
-            email: this.state.email,
-            password: this.state.password
-        })
-        .then(res=>{
-            localStorage.setItem('jwt', res.data.jwt);
-            localStorage.setItem('name', res.data.first_name);
-            localStorage.setItem('lastName', res.data.last_name);
-            this.setState({redirect: true});
-        })
-        .catch(err=>{
-            console.log(err)
-        });
+        store.dispatch(userLoginIn(this.state.email, this.state.password));
+        setTimeout(()=> {
+            let jwt = localStorage.getItem('jwt');
+            if(jwt != null) {
+                this.setState({redirect: true})
+            }
+        }, 500)
     }
 
     render () {

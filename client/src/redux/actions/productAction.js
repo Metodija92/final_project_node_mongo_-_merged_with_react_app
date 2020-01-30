@@ -41,6 +41,48 @@ export function editThisProduct
 
 // Thunk actions test
 
+export const userLoginIn = (email, password) => {
+    return async () => {
+        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
+            email: email,
+            password: password
+        })
+        .then(res=>{
+            localStorage.setItem('jwt', res.data.jwt);
+            localStorage.setItem('name', res.data.first_name);
+            localStorage.setItem('lastName', res.data.last_name);
+        })
+        .catch(err=>{
+            console.log(err)
+        });
+    }
+}
+
+export const userRegister = (firstName, lastName, email, password, birthday, telephone, country) => {
+    return async (dispatch) => {
+        dispatch(createUserStarted());
+        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/register', {
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                password: password,
+                birthday: birthday,
+                telephone: telephone,
+                country: country,
+                _created: new Date(),
+            })
+            .then(res => {
+                setTimeout(() => {
+                    dispatch(userLoginIn(email, password))
+                }, 1000);
+            })
+            .catch(err=>{
+                dispatch(createUserFailed());
+                console.log(err)
+            });
+    }
+}
+
 export const getProductsCall = () => {
     return async (dispatch) => {
         dispatch(getAllPostsStarted());
@@ -166,6 +208,24 @@ export const deleteProduct = (id) => {
         .catch(err => {
             console.log(err);
         });
+    }
+}
+
+const createUserStarted = () => {
+    return {
+        type: 'CREATE_USER_STARTED'
+    }
+}
+
+const createUserFailed = () => {
+    return {
+        type: 'CREATE_USER_FAILED'
+    }
+}
+
+export const createUserSuccess = () => {
+    return {
+        type: 'CREATE_USER_SUCCESS'
     }
 }
 

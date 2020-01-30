@@ -7,7 +7,9 @@ const initialUserState = {
     getAllPostsStarted: false,
     getAllPostsFailed: false,
     createOrEditStarted: false,
-    createOrEditFailed: false
+    createOrEditFailed: false,
+    createUserStarted: false,
+    createUserFailed: false
 }
 
 export function productsReducer (state = initialUserState, action) {
@@ -16,6 +18,27 @@ export function productsReducer (state = initialUserState, action) {
             return {
                 ...state,
                 jwt: action.payload
+            }
+        }
+        case 'CREATE_USER_STARTED' : {
+            return {
+                ...state,
+                createUserStarted: true,
+                createUserFailed: false
+            }
+        }
+        case 'CREATE_USER_FAILED' : {
+            return {
+                ...state,
+                createUserStarted: false,
+                createUserFailed: true
+            }
+        }
+        case 'CREATE_USER_SUCCESS' : {
+            return {
+                ...state,
+                createUserStarted: false,
+                createUserFailed: false
             }
         }
         case 'GET_PRODUCTS' : {
