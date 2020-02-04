@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from "react-router-dom"
 // import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import store from '../../redux/store'
@@ -6,7 +7,7 @@ import { userRegister } from '../../redux/actions/productAction'
 
 import '../../assets/css/Register.css'
 
-import { withRouter } from "react-router-dom"
+import ReactLoading from 'react-loading';
 
 class Register extends React.Component {
     constructor () {
@@ -23,6 +24,7 @@ class Register extends React.Component {
         }
     }
 
+    // Get input values
     saveInputValue = (event) => {
         this.setState({[event.target.id]: event.target.value})
     }
@@ -65,10 +67,10 @@ class Register extends React.Component {
         return (
             <React.Fragment>
                 {/* {this.renderRedirect()} */}
-                {this.props.createUserStarted ? <h1>CREATING USER</h1> : null}
                 <div id="register">
         
                     <div className="box-container" id="register-container">
+                {this.props.createUserStarted ? <ReactLoading type={'spin'} color={'#0abf34'} height={'10%'} width={'10%'} /> : null}
                         <form action="">
                             <p className="input-container">
                                 <label className="text-field-label" >First Name</label> <br/>

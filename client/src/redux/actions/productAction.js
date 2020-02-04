@@ -42,7 +42,7 @@ export function editThisProduct
 // Thunk actions test
 
 export const userLoginIn = (email, password, history) => {
-    return async (dispatch) => {
+    return async () => {
         axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
             email: email,
             password: password
