@@ -1,21 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import axios from 'axios'
 import '../../assets/css/Alert.css'
+import store from '../../redux/store'
+import {deleteProduct} from '../../redux/actions/productAction'
+
 
 const Alert = (props) => {
 
+    // Delete axios call and turn off Alert modal
     function deleteThisProduct() {
-        axios.delete(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${props.id}`,
-        { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-        .then(res => {
-            props.deleteAlert()
+        store.dispatch(deleteProduct(props.id))
+        props.deleteAlert()
+        setTimeout(() => {
             props.productDeleted()
-        })
-        .catch(err => {
-            console.log(err);
-        });
-        
+        }, 500);
     }
 
     return (

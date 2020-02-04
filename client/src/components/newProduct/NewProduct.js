@@ -1,9 +1,8 @@
 import React from 'react'
 import store from '../../redux/store'
-import {didUpdate, changeNewToEditProduct} from '../../redux/actions/productAction'
+import {createNewProduct, editExistingProduct} from '../../redux/actions/productAction'
 import {connect} from 'react-redux'
 
-import axios from 'axios'
 // eslint-disable-next-line
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import '../../assets/css/NewProduct.css'
@@ -21,11 +20,14 @@ class NewProduct extends React.Component {
         }
     }
 
+    // Save input values to state when creating new product
     saveInputValue = (event) => {
         this.setState({[event.target.id]: event.target.value})
     }
 
+    // Create product
     createNewProduct = (event) => {
+        // Check if all inputs have been filled
         if(this.state.productName === null ||
             this.state.productType === null ||
             this.state.productDescription === null ||
@@ -33,56 +35,35 @@ class NewProduct extends React.Component {
             this.state.productPrice === null){
                 event.preventDefault()
                 alert('Please fill out all the fields')
-        } else if( this.state.productName != null &&
-            this.state.productType != null &&
-            this.state.productDescription != null &&
-            this.state.purchaseDate != null &&
-            this.state.productPrice != null) {
-            axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/products/', {
-                productName: this.state.productName,
-                productType: this.state.productType,
-                productDescription: this.state.productDescription,
-                purchaseDate: this.state.purchaseDate,
-                productPrice: this.state.productPrice,
-                _created: new Date()
-            }, { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-            .then(res => {
-                // console.log(res);
-            })
-            .catch(err => {
-                console.log(err);
-            });
-            store.dispatch(didUpdate(true))
+        } else {// Create product axios call
+            store.dispatch(createNewProduct(
+                this.state.productName,
+                this.state.productType,
+                this.state.productDescription,
+                this.state.purchaseDate,
+                this.state.productPrice)
+            )
         }
     }
 
+    // Edit product
     editProduct = (event) => {
-
+        // Check if all inputs have been filled
         if(this.state.productName === '' ||
             this.state.productType === '' ||
             this.state.productDescription === '' ||
             this.state.purchaseDate === '' ||
-            this.state.productPrice === 0) {
+            this.state.productPrice === null) {
                 alert('All fields must be filled out')
                 event.preventDefault()
-        } else {
-            axios.put(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${this.props.productToEdit.id}`, {
-                productName: this.state.productName,
-                productType: this.state.productType,
-                productDescription: this.state.productDescription,
-                purchaseDate: this.state.purchaseDate,
-                productPrice: this.state.productPrice,
-                _modified: new Date()
-            }, { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-            .then(res => {
-                // console.log(res);
-            })
-            .catch(err => {
-                console.log(err);
-                alert('All the fields must be filled out in order to edit your product succesfuly!')
-            });
-            store.dispatch(didUpdate(true))
-            store.dispatch(changeNewToEditProduct(false))
+        } else { // Edit product axios call
+            store.dispatch(editExistingProduct(this.props.productToEdit.id,
+                this.state.productName,
+                this.state.productType,
+                this.state.productDescription,
+                this.state.purchaseDate,
+                this.state.productPrice)
+            )
         }
     }
 

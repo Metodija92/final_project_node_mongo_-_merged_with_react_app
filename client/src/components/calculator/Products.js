@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios'
 import { connect } from 'react-redux'
 // eslint-disable-next-line
 import { BrowserRouter as Router, Link } from 'react-router-dom'
@@ -8,7 +7,7 @@ import Table from '../table/Table'
 import Alert from './Alert'
 
 import store from '../../redux/store'
-import {getProducts, didUpdate, changeNewToEditProduct} from '../../redux/actions/productAction'
+import {changeNewToEditProduct, getProductsCall, getProductsSorted} from '../../redux/actions/productAction'
 import '../../assets/css/Products.css'
 
 
@@ -18,20 +17,23 @@ class Products extends React.Component {
         this.state = {
             showProducts: true,
             showAlert: false,
-            didUpdate: false,
-            sort: null
+            didUpdate: this.props.didUpdate,
+            sort: "purchaseDate:desc"
         }
     }
 
+    // Show modal - Delete Alter
     deleteAlert = () => {
         this.setState({showAlert: !this.state.showAlert})
     }
 
+    // Updates component after deleting product, sent as prop so <Alert />
     productDeleted = () => {
         this.setState({didUpdate: true})
     }
 
-    filterProduct = (event) => {
+    // Triggers sort order onClick in select box
+    sortProduct = (event) => {
         this.setState({
             didUpdate: true,
             sort: event.target.value
@@ -39,51 +41,22 @@ class Products extends React.Component {
     }
 
     componentDidMount(){
-        axios.get("https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=purchaseDate:desc", 
-        { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-        .then(res=>{
-            store.dispatch(getProducts(res.data))
+        store.dispatch(getProductsCall())
+        // Give time to Mongo to write data before going in update(Mongo returns OK while data in Quee to be written)
+        setTimeout(() => {
             this.setState({didUpdate: this.props.didUpdate})
-            console.log('didMount')
-        })
-        .catch(err=>{
-            console.log(err)
-        })
+        }, 500)
     }
 
-    // ***Trigira posle brishenje na proizvod i posle edit / create new***
+    // ***Triggers after deleting, editing or creating new product***
     componentDidUpdate() {
         if(this.state.didUpdate === true) {
-            if(this.state.sort === null) {
-                axios.get("https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=purchaseDate:desc",
-                { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-                .then(res=>{
-                    store.dispatch(getProducts(res.data))
-                    store.dispatch(didUpdate(false))
-                    console.log('didUpdate')
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-                this.setState({didUpdate: false})
-            } else if(this.state.sort != null) {
-                axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=${this.state.sort}`,
-                { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
-                .then(res=>{
-                    store.dispatch(getProducts(res.data))
-                    store.dispatch(didUpdate(false))
-                    console.log('didUpdate')
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-                this.setState({
-                    didUpdate: false,
-                    sort: null
-                })
-            } else {
-                console.log('Error kaj Products - compDidUpdate!')
-            }
+            store.dispatch(getProductsSorted(this.state.sort));
+            this.setState({
+                didUpdate: false,
+                sort: "purchaseDate:desc"
+            })
+            console.log('Did update')
         }
     }
 
@@ -100,7 +73,7 @@ class Products extends React.Component {
                         <h1>Products</h1>
                         <p id="select-box-container">
                             <label htmlFor="purchase-filter">Sort by:</label>
-                            <select name="purchase-filter" className="select-box" onChange={this.filterProduct}>
+                            <select name="purchase-filter" className="select-box" onChange={this.sortProduct}>
                                 <option value="purchaseDate:desc">Latest Purchase</option>
                                 <option value="productPrice:desc">Highest Price</option>
                                 <option value="productPrice:asc">Lowest Price</option>

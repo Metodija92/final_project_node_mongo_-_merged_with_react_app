@@ -1,7 +1,13 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
-import axios from 'axios'
+import { withRouter } from "react-router-dom"
+// import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import store from '../../redux/store'
+import { userRegister } from '../../redux/actions/productAction'
+
 import '../../assets/css/Register.css'
+
+import ReactLoading from 'react-loading';
 
 class Register extends React.Component {
     constructor () {
@@ -18,15 +24,19 @@ class Register extends React.Component {
         }
     }
 
+    // Get input values
     saveInputValue = (event) => {
         this.setState({[event.target.id]: event.target.value})
     }
 
-    renderRedirect = () => {
-        if (this.state.redirect) {
-            return <Redirect to='/products' />
-        }
-    }
+    // Redirects user to Products page if authentication is successfull
+    // ***Cant be used when redirecting from thunk actions, 
+    // instead use withRouter() to export history and history.push() in thunk action***
+    // renderRedirect = () => {
+    //     if (this.state.redirect) {
+    //         return <Redirect to='/products' />
+    //     }
+    // }
 
     registerUser = (event) => {
         if(this.state.first_name === null ||
@@ -38,55 +48,31 @@ class Register extends React.Component {
             this.state.country === null ){
                 event.preventDefault()
                 alert('Please fill out all the fields')
-        } 
-        else if (this.state.first_name != null &&
-            this.state.last_name != null &&
-            this.state.email != null &&
-            this.state.password != null &&
-            this.state.birthday != null &&
-            this.state.telephone != null &&
-            this.state.country != null) {
+        } else  {
             event.preventDefault()
-            axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/register', {
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                email: this.state.email.toLowerCase(),
-                password: this.state.password,
-                birthday: this.state.birthday,
-                telephone: this.state.telephone,
-                country: this.state.country,
-                _created: new Date(),
-            })
-            .then(res => {
-                setTimeout(() => {
-                    axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
-                        email: this.state.email,
-                        password: this.state.password
-                    })
-                    .then(res=>{
-                        localStorage.setItem('jwt', res.data.jwt);
-                        localStorage.setItem('name', this.state.first_name);
-                        localStorage.setItem('lastName', this.state.last_name);
-                        this.setState({redirect: true});
-                    })
-                    .catch(err=>{
-                        throw new Error(err);
-                    });
-                }, 1000);
-            })
-            .catch(err=>{
-                console.log(err)
-            });
+            store.dispatch(userRegister(
+                this.state.first_name,
+                this.state.last_name,
+                this.state.email.toLowerCase(),
+                this.state.password,
+                this.state.birthday,
+                this.state.telephone,
+                this.state.country,
+                this.props.history)
+            )
         }
     }
 
     render () {
         return (
             <React.Fragment>
-                {this.renderRedirect()}
+                {/* {this.renderRedirect()} */}
                 <div id="register">
         
                     <div className="box-container" id="register-container">
+                        {this.props.createUserStarted ? 
+                            <ReactLoading type={'spin'} color={'#0abf34'} height={'10%'} width={'10%'} /> 
+                        : null}
                         <form action="">
                             <p className="input-container">
                                 <label className="text-field-label" >First Name</label> <br/>
@@ -132,4 +118,10 @@ class Register extends React.Component {
     
 }
 
-export default Register
+function mapStateToProps (state) {
+    return {
+        createUserStarted: state.productsReducer.createUserStarted
+    }
+}
+
+export default connect(mapStateToProps)(withRouter(Register))

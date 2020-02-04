@@ -10,6 +10,7 @@ class Home extends React.Component {
         }
     }
 
+    // Show Login or Register page
     registerAccount = () => {
         this.setState({showRegister: !this.state.showRegister})
     }
