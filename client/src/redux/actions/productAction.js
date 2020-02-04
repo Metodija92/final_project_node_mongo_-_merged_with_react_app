@@ -41,8 +41,8 @@ export function editThisProduct
 
 // Thunk actions test
 
-export const userLoginIn = (email, password) => {
-    return async () => {
+export const userLoginIn = (email, password, history) => {
+    return async (dispatch) => {
         axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
             email: email,
             password: password
@@ -52,13 +52,16 @@ export const userLoginIn = (email, password) => {
             localStorage.setItem('name', res.data.first_name);
             localStorage.setItem('lastName', res.data.last_name);
         })
+        .then(() => {
+            history.push("/products")
+        })
         .catch(err=>{
             console.log(err)
         });
     }
 }
 
-export const userRegister = (firstName, lastName, email, password, birthday, telephone, country) => {
+export const userRegister = (firstName, lastName, email, password, birthday, telephone, country, history) => {
     return async (dispatch) => {
         dispatch(createUserStarted());
         axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/register', {
@@ -73,7 +76,8 @@ export const userRegister = (firstName, lastName, email, password, birthday, tel
             })
             .then(res => {
                 setTimeout(() => {
-                    dispatch(userLoginIn(email, password))
+                    dispatch(userLoginIn(email, password, history))
+                    dispatch(createUserSuccess());
                 }, 1000);
             })
             .catch(err=>{
@@ -223,7 +227,7 @@ const createUserFailed = () => {
     }
 }
 
-export const createUserSuccess = () => {
+const createUserSuccess = () => {
     return {
         type: 'CREATE_USER_SUCCESS'
     }

@@ -1,10 +1,12 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
+// import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import store from '../../redux/store'
-import {userRegister, createUserSuccess} from '../../redux/actions/productAction'
+import { userRegister } from '../../redux/actions/productAction'
 
 import '../../assets/css/Register.css'
+
+import { withRouter } from "react-router-dom"
 
 class Register extends React.Component {
     constructor () {
@@ -25,11 +27,14 @@ class Register extends React.Component {
         this.setState({[event.target.id]: event.target.value})
     }
 
-    renderRedirect = () => {
-        if (this.state.redirect) {
-            return <Redirect to='/products' />
-        }
-    }
+    // Redirects user to Products page if authentication is successfull
+    // ***Cant be used when redirecting from thunk actions, 
+    // instead use withRouter() to export history and history.push() in thunk action***
+    // renderRedirect = () => {
+    //     if (this.state.redirect) {
+    //         return <Redirect to='/products' />
+    //     }
+    // }
 
     registerUser = (event) => {
         if(this.state.first_name === null ||
@@ -50,24 +55,16 @@ class Register extends React.Component {
                 this.state.password,
                 this.state.birthday,
                 this.state.telephone,
-                this.state.country)
+                this.state.country,
+                this.props.history)
             )
-            setTimeout(()=> {
-                console.log(localStorage.getItem('jwt'))
-                let jwt = localStorage.getItem('jwt');
-                if(jwt != null) {
-                    store.dispatch(createUserSuccess())
-                    this.setState({redirect: true})
-                }
-                console.log(this.state.redirect)
-            }, 3000)
         }
     }
 
     render () {
         return (
             <React.Fragment>
-                {this.renderRedirect()}
+                {/* {this.renderRedirect()} */}
                 {this.props.createUserStarted ? <h1>CREATING USER</h1> : null}
                 <div id="register">
         
@@ -123,4 +120,4 @@ function mapStateToProps (state) {
     }
 }
 
-export default connect(mapStateToProps)(Register)
+export default connect(mapStateToProps)(withRouter(Register))
