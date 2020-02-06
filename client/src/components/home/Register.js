@@ -70,9 +70,6 @@ class Register extends React.Component {
                 <div id="register">
         
                     <div className="box-container" id="register-container">
-                        {this.props.createUserStarted ? 
-                            <ReactLoading type={'spin'} color={'#0abf34'} height={'10%'} width={'10%'} /> 
-                        : null}
                         <form action="">
                             <p className="input-container">
                                 <label className="text-field-label" >First Name</label> <br/>
@@ -102,8 +99,12 @@ class Register extends React.Component {
                                 <label className="text-field-label" >Country</label> <br/>
                                 <input type="text" className="text-field-input" id='country' onChange={this.saveInputValue}/>
                             </p>
-                                <button className="primary-button long" type="submit" onClick={this.registerUser}>REGISTER</button>
+                            
+                            <button className="primary-button long" type="submit" onClick={this.registerUser}>REGISTER</button>
                         </form>
+                        {this.props.createUserStarted ? 
+                                <ReactLoading type={'spin'} color={'#0abf34'} height={'10%'} width={'10%'} className={'spinner'}/> 
+                            : null}
                     </div>
                 
                     <div className="aditional-info">
