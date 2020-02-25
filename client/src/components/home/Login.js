@@ -1,14 +1,14 @@
 import React from 'react'
 import { withRouter } from "react-router-dom"
+import { connect } from 'react-redux'
 // import { Redirect } from 'react-router-dom'
-import store from '../../redux/store'
-import {userLoginIn} from '../../redux/actions/productAction'
+import { userLoginIn } from '../../redux/actions/productAction'
 
 import '../../assets/css/Login.css'
 
 
 class Login extends React.Component {
-    constructor () {
+    constructor() {
         super()
         this.state = {
             email: null,
@@ -19,7 +19,7 @@ class Login extends React.Component {
 
     // Get input values
     saveInputValue = (event) => {
-        this.setState({[event.target.id]: event.target.value})
+        this.setState({ [event.target.id]: event.target.value })
     }
 
     // Redirects user to Products page if authentication is successfull
@@ -33,15 +33,14 @@ class Login extends React.Component {
 
     logIn = (event) => {
         event.preventDefault();
-        store.dispatch(userLoginIn(
-            this.state.email, 
-            this.state.password, 
+        this.props.userLoginIn(
+            this.state.email,
+            this.state.password,
             this.props.history
-            )
         );
     }
 
-    render () {
+    render() {
         return (
             <React.Fragment>
                 {/* {this.renderRedirect()} */}
@@ -51,19 +50,19 @@ class Login extends React.Component {
                         <form action="">
                             <p className="input-container">
                                 {/* Vo label fali for="" zaso react vo console go dava kao error, dali treba da bide htmlFor ?*/}
-                                <label className="text-field-label" >E-mail</label> <br/>
-                                <input type="email" className="text-field-input" id='email' onChange={this.saveInputValue}/>
+                                <label className="text-field-label" >E-mail</label> <br />
+                                <input type="email" className="text-field-input" id='email' onChange={this.saveInputValue} />
                             </p>
                             <p className="input-container">
-                                <label className="text-field-label" >Password</label> <br/>
-                                <input type="password" className="text-field-input" id='password' onChange={this.saveInputValue}/>
+                                <label className="text-field-label" >Password</label> <br />
+                                <input type="password" className="text-field-input" id='password' onChange={this.saveInputValue} />
                             </p>
-                            <button className="primary-button long"  onClick={this.logIn}>SIGN IN</button>
+                            <button className="primary-button long" onClick={this.logIn}>SIGN IN</button>
                         </form>
                     </div>
 
                     <div className="aditional-info" id="aditional-info-login">
-                        <p>Or if you don't have an account, 
+                        <p>Or if you don't have an account,
                             <button onClick={this.props.registerAccount} className="register-login">Register</button>.
                         </p>
                     </div>
@@ -72,7 +71,15 @@ class Login extends React.Component {
             </React.Fragment>
         )
     }
-    
+
 }
 
-export default (withRouter(Login))
+function mapDispatchToProps(dispatch) {
+    return {
+        userLoginIn: (email, password, history) => {
+            dispatch(userLoginIn(email, password, history));
+        }
+    };
+}
+
+export default connect(null, mapDispatchToProps)(withRouter(Login))

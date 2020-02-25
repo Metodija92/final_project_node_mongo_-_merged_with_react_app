@@ -6,8 +6,7 @@ import { BrowserRouter as Router, Link } from 'react-router-dom'
 import Table from '../table/Table'
 import Alert from './Alert'
 
-import store from '../../redux/store'
-import {changeNewToEditProduct, getProductsCall, getProductsSorted} from '../../redux/actions/productAction'
+import { changeNewToEditProduct, getProductsCall, getProductsSorted } from '../../redux/actions/productAction'
 import '../../assets/css/Products.css'
 
 
@@ -24,12 +23,12 @@ class Products extends React.Component {
 
     // Show modal - Delete Alter
     deleteAlert = () => {
-        this.setState({showAlert: !this.state.showAlert})
+        this.setState({ showAlert: !this.state.showAlert })
     }
 
     // Updates component after deleting product, sent as prop so <Alert />
     productDeleted = () => {
-        this.setState({didUpdate: true})
+        this.setState({ didUpdate: true })
     }
 
     // Triggers sort order onClick in select box
@@ -40,18 +39,18 @@ class Products extends React.Component {
         })
     }
 
-    componentDidMount(){
-        store.dispatch(getProductsCall())
+    componentDidMount() {
+        this.props.getProductsCall();
         // Give time to Mongo to write data before going in update(Mongo returns OK while data in Quee to be written)
         setTimeout(() => {
-            this.setState({didUpdate: this.props.didUpdate})
+            this.setState({ didUpdate: this.props.didUpdate })
         }, 500)
     }
 
     // ***Triggers after deleting, editing or creating new product***
     componentDidUpdate() {
-        if(this.state.didUpdate === true) {
-            store.dispatch(getProductsSorted(this.state.sort));
+        if (this.state.didUpdate === true) {
+            this.props.getProductsSorted(this.state.sort);
             this.setState({
                 didUpdate: false,
                 sort: "purchaseDate:desc"
@@ -60,14 +59,14 @@ class Products extends React.Component {
         }
     }
 
-    render () {
+    render() {
         return (
             <React.Fragment>
-                { this.state.showAlert 
-                ? <Alert deleteAlert={this.deleteAlert} productDeleted={this.productDeleted}/> 
-                : null}
+                {this.state.showAlert
+                    ? <Alert deleteAlert={this.deleteAlert} productDeleted={this.productDeleted} />
+                    : null}
                 {/* *****Narednava linija ja renderira <Navbar/> a toggle mu treba za da se dodade klasa na kopceto Products da bide zeleno*****  */}
-                <this.props.component toggle={true}/>
+                <this.props.component toggle={true} />
                 <div id="products">
                     <div id="products-header">
                         <h1>Products</h1>
@@ -81,20 +80,34 @@ class Products extends React.Component {
                             </select>
                         </p>
                     </div>
-                    <Table showProducts={this.state.showProducts} deleteAlert={this.deleteAlert}/>
+                    <Table showProducts={this.state.showProducts} deleteAlert={this.deleteAlert} />
                 </div>
-                <Link to='/newproduct' ><button id="new-btn" onClick={()=>{store.dispatch(changeNewToEditProduct(false))}}>NEW PRODUCT</button></Link>
+                <Link to='/newproduct' ><button id="new-btn" onClick={() => { this.props.changeNewToEditProduct(false) }}>NEW PRODUCT</button></Link>
             </React.Fragment>
-            
+
         )
     }
 }
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
     return {
         products: state.productsReducer.products,
         didUpdate: state.productsReducer.didUpdate
     }
 }
 
-export default connect(mapStateToProps)(Products)
+function mapDispatchToProps(dispatch) {
+    return {
+        getProductsCall: () => {
+            dispatch(getProductsCall());
+        },
+        changeNewToEditProduct: (boolean) => {
+            dispatch(changeNewToEditProduct(boolean));
+        },
+        getProductsSorted: (sortQuery) => {
+            dispatch(getProductsSorted(sortQuery));
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Products)

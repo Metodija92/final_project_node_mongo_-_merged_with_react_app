@@ -1,9 +1,8 @@
 import React from 'react'
 import Table from '../table/Table'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import store from '../../redux/store'
-import {getProductsCall, getExpencesFiltered} from '../../redux/actions/productAction'
+import { getProductsCall, getExpencesFiltered } from '../../redux/actions/productAction'
 import '../../assets/css/Expences.css'
 
 
@@ -45,30 +44,30 @@ class Expences extends React.Component {
         })
     }
 
-    componentDidMount(){
-        store.dispatch(getProductsCall());
+    componentDidMount() {
+        this.props.getProductsCall();
     }
 
-    componentDidUpdate(){
-        if(this.state.didUpdate){
+    componentDidUpdate() {
+        if (this.state.didUpdate) {
             let myDate = this.state.filterValue
-            if(myDate === 'total'){
-                store.dispatch(getProductsCall());
-            } 
-            else if(myDate.length === 4){ // Filter by year
+            if (myDate === 'total') {
+                this.props.getProductsCall();
+            }
+            else if (myDate.length === 4) { // Filter by year
                 let fromTargetDate = new Date(`${myDate}-01-01 00:00:00.000`).getTime();
                 let toTargetDate = new Date(`${myDate}-12-31 23:59:59.000`).getTime();
-                store.dispatch(getExpencesFiltered(fromTargetDate, toTargetDate))
-            } else if (myDate.length === 7){ // Filter by month
+                this.props.getExpencesFiltered(fromTargetDate, toTargetDate);
+            } else if (myDate.length === 7) { // Filter by month
                 let fromTargetDate = new Date(`${myDate}-01 00:00:00.000`).getTime();
                 let toTargetDate = new Date(`${myDate}-31 23:59:59.000`).getTime();
-                store.dispatch(getExpencesFiltered(fromTargetDate, toTargetDate))
+                this.props.getExpencesFiltered(fromTargetDate, toTargetDate);
             }
-            this.setState({didUpdate: false})
+            this.setState({ didUpdate: false })
         }
     }
 
-    render () {
+    render() {
         // Total spent
         let totalSpent = 0
         for (let i = 0; i < this.props.products.length; i++) {
@@ -77,37 +76,37 @@ class Expences extends React.Component {
         // Options for selectbox - Year
         let today = new Date();
         let year = today.getFullYear();
-        let selectOptions= []
+        let selectOptions = []
         for (let i = 2000; i <= year; i++) {
-        selectOptions.push(<option key={i} value={i}>{i}</option>)
+            selectOptions.push(<option key={i} value={i}>{i}</option>)
         }
         selectOptions.reverse();
 
         return (
             <React.Fragment>
                 {/* *****Narednava linija ja renderira <Navbar/> a toggle mu treba za da se dodade klasa na kopceto Expences da bide zeleno*****  */}
-                <this.props.component toggle={false}/>
+                <this.props.component toggle={false} />
                 <div id="expenses">
                     <div id="expenses-header-one">
                         <h1>Expenses</h1>
                     </div>
 
                     <div id="expenses-header-two">
-                        <button className={this.state.toggle? "tab-btn active-tab-btn " : "tab-btn"} 
+                        <button className={this.state.toggle ? "tab-btn active-tab-btn " : "tab-btn"}
                             onClick={this.showYearly}>YEARLY
                         </button>
-                        <button className={!this.state.toggle? "tab-btn active-tab-btn " : "tab-btn"} 
+                        <button className={!this.state.toggle ? "tab-btn active-tab-btn " : "tab-btn"}
                             onClick={this.showMonhtly}>MONTHLY
                         </button>
 
-                        {this.state.showMonhtly ? 
+                        {this.state.showMonhtly ?
                             <p id="select-box-container">
                                 <label htmlFor="expenses-filter">Choose Month </label>
                                 <input type='month' className="select-box" id="expenses-month-box" onChange={this.searchFilter}></input>
                             </p>
-                        : null}
+                            : null}
 
-                        {this.state.showYearly ? 
+                        {this.state.showYearly ?
                             <p id="select-box-container">
                                 <label htmlFor="expenses-filter">Choose Year </label>
                                 <select name="expenses-filter" className="select-box" id="expenses-select-box" onChange={this.searchFilter}>
@@ -116,8 +115,8 @@ class Expences extends React.Component {
                                     {selectOptions}
                                 </select>
                             </p>
-                        : null}
-                            
+                            : null}
+
                     </div>
                     <Table />
                 </div>
@@ -125,15 +124,26 @@ class Expences extends React.Component {
                     <p>Total Spent: {totalSpent} den.</p>
                 </div>
             </React.Fragment>
-            
+
         )
     }
 }
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
     return {
         products: state.productsReducer.products
     }
 }
 
-export default connect(mapStateToProps)(Expences)
+function mapDispatchToProps(dispatch) {
+    return {
+        getProductsCall: () => {
+            dispatch(getProductsCall());
+        },
+        getExpencesFiltered: (fromTargetDate, toTargetDate) => {
+            dispatch(getExpencesFiltered(fromTargetDate, toTargetDate));
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Expences)

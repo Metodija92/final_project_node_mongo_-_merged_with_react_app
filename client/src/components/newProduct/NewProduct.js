@@ -1,10 +1,9 @@
 import React from 'react'
-import store from '../../redux/store'
-import {createNewProduct, editExistingProduct} from '../../redux/actions/productAction'
-import {connect} from 'react-redux'
-
 // eslint-disable-next-line
 import { BrowserRouter as Router, Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { createNewProduct, editExistingProduct } from '../../redux/actions/productAction'
+
 import '../../assets/css/NewProduct.css'
 
 class NewProduct extends React.Component {
@@ -22,48 +21,47 @@ class NewProduct extends React.Component {
 
     // Save input values to state when creating new product
     saveInputValue = (event) => {
-        this.setState({[event.target.id]: event.target.value})
+        this.setState({ [event.target.id]: event.target.value })
     }
 
     // Create product
     createNewProduct = (event) => {
         // Check if all inputs have been filled
-        if(this.state.productName === null ||
+        if (this.state.productName === null ||
             this.state.productType === null ||
             this.state.productDescription === null ||
             this.state.purchaseDate === null ||
-            this.state.productPrice === null){
-                event.preventDefault()
-                alert('Please fill out all the fields')
+            this.state.productPrice === null) {
+            event.preventDefault()
+            alert('Please fill out all the fields')
         } else {// Create product axios call
-            store.dispatch(createNewProduct(
+            this.props.createNewProduct(
                 this.state.productName,
                 this.state.productType,
                 this.state.productDescription,
                 this.state.purchaseDate,
-                this.state.productPrice)
-            )
+                this.state.productPrice);
         }
     }
 
     // Edit product
     editProduct = (event) => {
         // Check if all inputs have been filled
-        if(this.state.productName === '' ||
+        if (this.state.productName === '' ||
             this.state.productType === '' ||
             this.state.productDescription === '' ||
             this.state.purchaseDate === '' ||
             this.state.productPrice === null) {
-                alert('All fields must be filled out')
-                event.preventDefault()
+            alert('All fields must be filled out')
+            event.preventDefault()
         } else { // Edit product axios call
-            store.dispatch(editExistingProduct(this.props.productToEdit.id,
+            this.props.editExistingProduct(
+                this.props.productToEdit.id,
                 this.state.productName,
                 this.state.productType,
                 this.state.productDescription,
                 this.state.purchaseDate,
-                this.state.productPrice)
-            )
+                this.state.productPrice);
         }
     }
 
@@ -71,74 +69,74 @@ class NewProduct extends React.Component {
         return (
             <React.Fragment>
                 {/* *****Narednava linija ja renderira <Navbar/> a toggle mu treba za da se dodade klasa na kopceto Products da bide zeleno*****  */}
-                <this.props.component toggle={true}/>
+                <this.props.component toggle={true} />
                 <div id="newproduct-header">
                     <h1>New Product</h1>
                 </div>
-    
+
                 <div id="newproduct">
                     <div className="box-container" id="add-new-product-container">
                         <form action="">
-                                <p className="input-container">
-                                    <label className="text-field-label">Product Name</label> <br/>
-                                    <input type="text" className="text-field-input"
+                            <p className="input-container">
+                                <label className="text-field-label">Product Name</label> <br />
+                                <input type="text" className="text-field-input"
                                     id='productName'
                                     onChange={this.saveInputValue}
-                                    defaultValue={this.state.showEditProduct ? 
-                                                this.props.productToEdit.productName : 
-                                                null} />
-                                </p>
-                                <p className="input-container">
-                                    <label className="text-field-label">Product Type</label> <br/>
-                                    <input type="text" className="text-field-input"
+                                    defaultValue={this.state.showEditProduct ?
+                                        this.props.productToEdit.productName :
+                                        null} />
+                            </p>
+                            <p className="input-container">
+                                <label className="text-field-label">Product Type</label> <br />
+                                <input type="text" className="text-field-input"
                                     id='productType'
-                                    onChange={this.saveInputValue} 
-                                    defaultValue={this.state.showEditProduct ? 
-                                                this.props.productToEdit.productType : 
-                                                null} />
-                                </p>
-                                <p className="input-container">
-                                    <label className="text-field-label">Product Description</label> <br/>
-                                    <input type="text" className="text-field-input"
+                                    onChange={this.saveInputValue}
+                                    defaultValue={this.state.showEditProduct ?
+                                        this.props.productToEdit.productType :
+                                        null} />
+                            </p>
+                            <p className="input-container">
+                                <label className="text-field-label">Product Description</label> <br />
+                                <input type="text" className="text-field-input"
                                     id='productDescription'
-                                    onChange={this.saveInputValue} 
-                                    defaultValue={this.state.showEditProduct ? 
-                                                this.props.productToEdit.productDescription : 
-                                                null} />
-                                </p>
-                                <p className="input-container">
-                                    <label className="text-field-label">Purchase Date</label> <br/>
-                                    <input type="date" className="text-field-input"
+                                    onChange={this.saveInputValue}
+                                    defaultValue={this.state.showEditProduct ?
+                                        this.props.productToEdit.productDescription :
+                                        null} />
+                            </p>
+                            <p className="input-container">
+                                <label className="text-field-label">Purchase Date</label> <br />
+                                <input type="date" className="text-field-input"
                                     id='purchaseDate'
-                                    onChange={this.saveInputValue} 
-                                    defaultValue={this.state.showEditProduct ? 
-                                                this.props.productToEdit.purchaseDate : 
-                                                null} />
-                                </p>
-                                <p className="input-container">
-                                    <label className="text-field-label">Product Price</label> <br/>
-                                    <input type="text" className="text-field-input"
+                                    onChange={this.saveInputValue}
+                                    defaultValue={this.state.showEditProduct ?
+                                        this.props.productToEdit.purchaseDate :
+                                        null} />
+                            </p>
+                            <p className="input-container">
+                                <label className="text-field-label">Product Price</label> <br />
+                                <input type="text" className="text-field-input"
                                     id='productPrice'
-                                    onChange={this.saveInputValue} 
-                                    defaultValue={this.state.showEditProduct ? 
-                                                this.props.productToEdit.productPrice : 
-                                                null} />
-                                </p>
-                                <Link to='/products'>
-                                    {!this.state.showEditProduct ? 
-                                        <button className="primary-button long" id="create-btn" 
+                                    onChange={this.saveInputValue}
+                                    defaultValue={this.state.showEditProduct ?
+                                        this.props.productToEdit.productPrice :
+                                        null} />
+                            </p>
+                            <Link to='/products'>
+                                {!this.state.showEditProduct ?
+                                    <button className="primary-button long" id="create-btn"
                                         onClick={this.createNewProduct}>CREATE PRODUCT</button> :
-                                        <button className="primary-button long" id="create-btn" 
+                                    <button className="primary-button long" id="create-btn"
                                         onClick={this.editProduct}>EDIT PRODUCT</button>
-                                    }
-                                </Link>
+                                }
+                            </Link>
                         </form>
                     </div>
-    
+
                     <div id="new-product-shadow-container">
                         <p><i className="fas fa-plus-circle fa-5x"></i></p>
-                        {!this.state.showEditProduct ? <p>You are creating a new product</p> : 
-                        <p>You are editing your product</p>}
+                        {!this.state.showEditProduct ? <p>You are creating a new product</p> :
+                            <p>You are editing your product</p>}
                     </div>
                 </div>
             </React.Fragment>
@@ -146,7 +144,7 @@ class NewProduct extends React.Component {
     }
 }
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
     return {
         products: state.productsReducer.products,
         productToEdit: state.productsReducer.productToEdit[0],
@@ -154,4 +152,15 @@ function mapStateToProps (state) {
     }
 }
 
-export default connect(mapStateToProps)(NewProduct)
+function mapDispatchToProps(dispatch) {
+    return {
+        createNewProduct: (name, type, description, date, price) => {
+            dispatch(createNewProduct(name, type, description, date, price));
+        },
+        editExistingProduct: (id, name, type, description, date, price) => {
+            dispatch(editExistingProduct(id, name, type, description, date, price));
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewProduct)
