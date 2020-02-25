@@ -65,25 +65,25 @@ export const userRegister = (firstName, lastName, email, password, birthday, tel
     return async (dispatch) => {
         dispatch(createUserStarted());
         axios.post('/api/v1/auth/register', {
-                first_name: firstName,
-                last_name: lastName,
-                email: email,
-                password: password,
-                birthday: birthday,
-                telephone: telephone,
-                country: country,
-                _created: new Date(),
-            })
-            .then(res => {
-                setTimeout(() => {
-                    dispatch(userLoginIn(email, password, history))
-                    dispatch(createUserSuccess());
-                }, 1000);
-            })
-            .catch(err=>{
-                dispatch(createUserFailed());
-                console.log(err)
-            });
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            password: password,
+            birthday: birthday,
+            telephone: telephone,
+            country: country,
+            _created: new Date(),
+        })
+        .then(res => {
+            setTimeout(() => {
+                dispatch(userLoginIn(email, password, history))
+                dispatch(createUserSuccess());
+            }, 1000);
+        })
+        .catch(err=>{
+            dispatch(createUserFailed());
+            console.log(err)
+        });
     }
 }
 
