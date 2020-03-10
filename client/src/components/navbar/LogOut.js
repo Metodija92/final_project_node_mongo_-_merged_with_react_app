@@ -1,10 +1,16 @@
 import React from 'react'
 
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 const LogOut = (props) => {
 
     function logOut() {
-        localStorage.clear();
         props.showLogOut()
+        localStorage.clear();   
+        cookies.remove('jwt')
+        cookies.remove('name')
+        cookies.remove('lastName')
     }
 
     return (

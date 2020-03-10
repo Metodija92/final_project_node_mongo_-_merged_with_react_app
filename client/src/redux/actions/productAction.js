@@ -51,7 +51,7 @@ export const userLoginIn = (email, password, history) => {
             password: password
         })
         .then(res=>{
-            localStorage.setItem('jwt', res.data.jwt);
+            // localStorage.setItem('jwt', res.data.jwt);
             // localStorage.setItem('name', res.data.first_name);
             // localStorage.setItem('lastName', res.data.last_name);
             cookies.set('name', res.data.first_name);

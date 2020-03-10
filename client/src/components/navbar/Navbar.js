@@ -42,7 +42,7 @@ class Navbar extends React.Component {
     render() {
         return (
             <React.Fragment>
-                {!localStorage.getItem('jwt') ? <Redirect to='/' /> : null}
+                {!cookies.get('jwt') ? <Redirect to='/' /> : null}
                 {this.state.showLogOut
                     ? <LogOut showLogOut={this.showLogOut} />
                     : null}
@@ -63,7 +63,6 @@ class Navbar extends React.Component {
                         <div className="profile-container">
                             <img src={galgadot} alt="#" className="profile-picture" />
                             <a href="#" className="user-name" onClick={this.showLogOut}>
-                                {/* {localStorage.getItem('name') + ' ' + localStorage.getItem('lastName')} */}
                                 {cookies.get('name') + ' ' + cookies.get('lastName')}</a>
                         </div>
                     </nav>
