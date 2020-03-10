@@ -6,6 +6,9 @@ import { userLoginIn } from '../../redux/actions/productAction'
 
 import '../../assets/css/Login.css'
 
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 
 class Login extends React.Component {
     constructor() {
@@ -38,6 +41,7 @@ class Login extends React.Component {
             this.state.password,
             this.props.history
         );
+        cookies.set('cookieTest', 'Kolache');
     }
 
     render() {

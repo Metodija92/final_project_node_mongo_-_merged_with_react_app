@@ -1,5 +1,8 @@
 import axios from 'axios'
 
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 export function getJwt (data) {
     return {
         type: 'GET_JWT',
@@ -43,14 +46,17 @@ export function editThisProduct
 
 export const userLoginIn = (email, password, history) => {
     return async () => {
-        axios.post('/api/v1/auth/login', {
+        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
             email: email,
             password: password
         })
         .then(res=>{
             localStorage.setItem('jwt', res.data.jwt);
-            localStorage.setItem('name', res.data.first_name);
-            localStorage.setItem('lastName', res.data.last_name);
+            // localStorage.setItem('name', res.data.first_name);
+            // localStorage.setItem('lastName', res.data.last_name);
+            cookies.set('name', res.data.first_name);
+            cookies.set('lastName', res.data.last_name);
+            cookies.set('jwt', res.data.jwt);
         })
         .then(() => {
             history.push("/products")
@@ -64,7 +70,7 @@ export const userLoginIn = (email, password, history) => {
 export const userRegister = (firstName, lastName, email, password, birthday, telephone, country, history) => {
     return async (dispatch) => {
         dispatch(createUserStarted());
-        axios.post('/api/v1/auth/register', {
+        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/register', {
             first_name: firstName,
             last_name: lastName,
             email: email,
@@ -90,8 +96,8 @@ export const userRegister = (firstName, lastName, email, password, birthday, tel
 export const getProductsCall = () => {
     return async (dispatch) => {
         dispatch(getAllPostsStarted());
-        axios.get("/api/v1/products/?sort=purchaseDate:desc", 
-        { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
+        axios.get("https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=purchaseDate:desc", 
+        { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
                 type: 'GET_PRODUCTS',
@@ -108,8 +114,8 @@ export const getProductsCall = () => {
 export const getProductsSorted = (sortQuery) => {
     return async (dispatch) => {
         dispatch(getAllPostsStarted());
-        axios.get(`/api/v1/products/?sort=${sortQuery}`,
-        { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
+        axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=${sortQuery}`,
+        { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
                 type: 'GET_PRODUCTS',
@@ -130,8 +136,8 @@ export const getProductsSorted = (sortQuery) => {
 export const getExpencesFiltered = (from, to) => {
     return async (dispatch) => {
         dispatch(getAllPostsStarted());
-        axios.get(`/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc`,
-        { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
+        axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc`,
+        { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
                 type: 'GET_PRODUCTS',
@@ -148,14 +154,14 @@ export const getExpencesFiltered = (from, to) => {
 export const createNewProduct = (name, type, description, date, price) => {
     return async (dispatch) => {
         dispatch(createOrEditStarted());
-        axios.post('/api/v1/products/', {
+        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/products/', {
             productName: name,
             productType: type,
             productDescription: description,
             purchaseDate: date,
             productPrice: price,
             _created: new Date()
-        }, { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
+        }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
             // console.log(res);
             dispatch(createOrEditSuccess());
@@ -174,14 +180,14 @@ export const createNewProduct = (name, type, description, date, price) => {
 export const editExistingProduct = (id, name, type, description, date, price) => {
     return async (dispatch) => {
         dispatch(createOrEditStarted());
-        axios.put(`/api/v1/products/${id}`, {
+        axios.put(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${id}`, {
             productName: name,
             productType: type,
             productDescription: description,
             purchaseDate: date,
             productPrice: price,
             _modified: new Date()
-        }, { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
+        }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
             // console.log(res);
             dispatch(createOrEditSuccess());
@@ -204,8 +210,8 @@ export const editExistingProduct = (id, name, type, description, date, price) =>
 
 export const deleteProduct = (id) => {
     return async () => {
-        axios.delete(`/api/v1/products/${id}`,
-        { headers: {"Authorization" : `Bearer ${localStorage.getItem('jwt')}`}})
+        axios.delete(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${id}`,
+        { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
             // console.log(res);
         })

@@ -6,6 +6,10 @@ import { changeNewToEditProduct } from '../../redux/actions/productAction'
 
 import LogOut from './LogOut'
 import galgadot from '../../assets/images/galgadot.jpg'
+
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 /* eslint-disable */
 class Navbar extends React.Component {
     constructor(props) {
@@ -59,7 +63,8 @@ class Navbar extends React.Component {
                         <div className="profile-container">
                             <img src={galgadot} alt="#" className="profile-picture" />
                             <a href="#" className="user-name" onClick={this.showLogOut}>
-                                {localStorage.getItem('name') + ' ' + localStorage.getItem('lastName')}</a>
+                                {/* {localStorage.getItem('name') + ' ' + localStorage.getItem('lastName')} */}
+                                {cookies.get('name') + ' ' + cookies.get('lastName')}</a>
                         </div>
                     </nav>
                 </div>
