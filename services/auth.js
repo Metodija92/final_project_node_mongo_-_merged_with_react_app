@@ -23,11 +23,13 @@ api.use(
         secret: config.getConfig('jwt').key
     })
     .unless({
-        path: ['/api/v1/auth/register', '/api/v1/auth/login']
+        path: ['/api/v1/auth/register', '/api/v1/auth/login', '/public', /\/api\/v1\/auth\/confirm\/.*/, 
+        '/api/v1/auth/reset-link', '/api/v1/auth/reset-password']
     })
 );
 
 api.post('/api/v1/auth/register', auth.register);
+api.get('/api/v1/auth/confirm/:confirm_hash', auth.confirm);
 api.post('/api/v1/auth/login', auth.login);
 api.get('/api/v1/auth/user/:email', auth.userInfo);
 api.get('/api/v1/auth/renew', auth.renew);

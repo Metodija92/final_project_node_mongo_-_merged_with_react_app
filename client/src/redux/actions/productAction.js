@@ -46,7 +46,7 @@ export function editThisProduct
 
 export const userLoginIn = (email, password, history) => {
     return async () => {
-        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
+        axios.post('http://localhost:8081/api/v1/auth/login', {
             email: email,
             password: password
         })
@@ -70,7 +70,7 @@ export const userLoginIn = (email, password, history) => {
 export const userRegister = (firstName, lastName, email, password, birthday, telephone, country, history) => {
     return async (dispatch) => {
         dispatch(createUserStarted());
-        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/register', {
+        axios.post('http://localhost:8081/api/v1/auth/register', {
             first_name: firstName,
             last_name: lastName,
             email: email,

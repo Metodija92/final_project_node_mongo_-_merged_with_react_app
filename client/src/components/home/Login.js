@@ -2,13 +2,26 @@ import React from 'react'
 import { withRouter } from "react-router-dom"
 import { connect } from 'react-redux'
 // import { Redirect } from 'react-router-dom'
+import ResetPassword from './ResetPassword'
 import { userLoginIn } from '../../redux/actions/productAction'
+import Modal from 'react-modal';
 
 import '../../assets/css/Login.css'
 
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
+const customStyles = {
+    content : {
+      top                   : '50%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+      transform             : 'translate(-50%, -50%)'
+    }
+};
+Modal.setAppElement('#root')
 
 class Login extends React.Component {
     constructor() {
@@ -16,7 +29,8 @@ class Login extends React.Component {
         this.state = {
             email: null,
             password: null,
-            redirect: false
+            redirect: false,
+            isOpen: false
         }
     }
 
@@ -44,6 +58,10 @@ class Login extends React.Component {
         cookies.set('cookieTest', 'Kolache');
     }
 
+    resetModal = () => {
+        this.setState({isOpen: !this.state.isOpen})
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -63,6 +81,12 @@ class Login extends React.Component {
                             </p>
                             <button className="primary-button long" onClick={this.logIn}>SIGN IN</button>
                         </form>
+                        <p id='reset-link'>Can't remember your password ? 
+                            <button id='reset-link-button' onClick={this.resetModal}>Click here</button>
+                        </p>
+                        <Modal isOpen={this.state.isOpen} style={customStyles}>
+                            <ResetPassword resetModal={this.resetModal}/>
+                        </Modal>
                     </div>
 
                     <div className="aditional-info" id="aditional-info-login">

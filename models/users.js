@@ -10,6 +10,9 @@ const User = mongoose.model(
         birthday: Date,
         telephone: String,
         country: String,
+        confirm_hash: String,
+        reset_hash: String,
+        confirmed: Boolean,
         _created: Date,
         _modified: Date
     })
@@ -38,8 +41,32 @@ const getUserPasswordByEmail = (email) => {
     });
 }
 
+const confirmUserAccount = (hash) => {
+    return new Promise((success, fail) => {
+        User.updateOne({confirm_hash: hash}, {confirmed: true}, (err) => {
+            if(err){
+                return fail(err);
+            }
+            return success();
+        })
+    })
+}
+
+const resetPasswordHash = (email, reset_hash) => {
+    return new Promise((success, fail) => {
+        User.updateOne({email: email}, {reset_hash: reset_hash}, (err) => {
+            if(err) {
+                return fail(err);
+            }
+            return success();
+        })
+    })
+}
+
 
 module.exports = {
     createUser,
-    getUserPasswordByEmail
+    getUserPasswordByEmail,
+    confirmUserAccount,
+    resetPasswordHash
 }

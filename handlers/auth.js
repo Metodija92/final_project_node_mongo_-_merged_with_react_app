@@ -4,6 +4,8 @@ const validator = require('node-input-validator');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const config = require('../config/index.js');
+const randomString = require('randomstring');
+const sgMail = require('@sendgrid/mail');
 
 
 const register = (req, res) => {
@@ -24,7 +26,26 @@ const register = (req, res) => {
                                 throw new Error(err);
                                 return;
                             }
-                            return mUsers.createUser({...req.body, password: hash});
+                            var confirm_hash = randomString.generate({
+                                length: 30,
+                                charset: 'alphanumeric'
+                            });
+                            mUsers.createUser({
+                                ...req.body, 
+                                password: hash,
+                                confirm_hash: confirm_hash,
+                                confirmed: false
+                            });
+                            sgMail.setApiKey(config.getConfig('mailer').key);
+                            let msg = {
+                            to: req.body.email,
+                            from: 'metothedj@yahoo.com',
+                            subject: 'Testing the SENDGRID',
+                            text: 'Thanks for registrating',
+                            html: `<a href="http://localhost:8081/api/v1/confirm/${confirm_hash}">Click here to confirm you account</a>`,
+                            };
+                            sgMail.send(msg);
+                            return ;
                         });
                     });
                 } else {
@@ -86,7 +107,29 @@ const renew = (req, res) => {
 }
 
 const resetLink = (req, res) => {
-    return res.status(200).send('ok');
+    var reset_hash = randomString.generate({
+        length: 30,
+        charset: 'alphanumeric'
+    });
+    // Kreira reset_hash i go zapishuva kaj user infoto vo DB
+    mUsers.resetPasswordHash(req.body.email, reset_hash)
+    .then(() => {
+        sgMail.setApiKey(config.getConfig('mailer').key);
+            let msg = {
+            to: req.body.email,
+            from: 'metothedj@gmail.com',
+            subject: 'Testing the RESET LINK',
+            text: 'GET RESET HASH',
+            // Tuka treba link do druga komponenta kade sto ke se vnese nov pass i posle post povik da se zapise noviot pass
+            html: `<p>${reset_hash}</p>`,
+            html: `<a href="http://localhost:8081/api/v1/auth/reset-password">${reset_hash} - Click here to reset your password</a>`,
+            };
+            sgMail.send(msg);
+        return res.status(200).send('ok');
+    })
+    .catch(err => {
+        return res.status(500).send('Could not send email');
+    })
 }
 
 const resetPassword = (req, res) => {
@@ -97,6 +140,17 @@ const changePassword = (req, res) => {
     return res.status(200).send('ok');
 }
 
+const confirm = (req, res) => {
+    var hash = req.params.confirm_hash
+    mUsers.confirmUserAccount(hash)
+    .then(() => {
+        return res.status(200).send('ok');
+    })
+    .catch((err) => {
+        return res.status(500).send('Internal server error');
+    })
+}
+
 
 module.exports = {
     register,
@@ -105,5 +159,6 @@ module.exports = {
     resetLink,
     resetPassword,
     changePassword,
-    userInfo
+    userInfo,
+    confirm
 }
