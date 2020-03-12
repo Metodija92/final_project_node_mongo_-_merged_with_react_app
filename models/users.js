@@ -63,10 +63,34 @@ const resetPasswordHash = (email, reset_hash) => {
     })
 }
 
+const resetPassword = (hash, password_hash) => {
+    return new Promise((success, fail) => {
+        User.updateOne({reset_hash: hash}, {password: password_hash, reset_hash: '', _modified: new Date()}, (err) => {
+            if(err){
+                return fail(err);
+            }
+            return success();
+        })
+    })
+}
+
+const getEmailAfterReset = (pass_hash) => {
+    return new Promise((success, fail) => {
+        User.find({password: pass_hash},(err, data) => {
+            if(err){
+                return fail(err);
+            }
+            return success(data[0]);
+        })
+    })
+}
+
 
 module.exports = {
     createUser,
     getUserPasswordByEmail,
     confirmUserAccount,
-    resetPasswordHash
+    resetPasswordHash,
+    resetPassword,
+    getEmailAfterReset
 }

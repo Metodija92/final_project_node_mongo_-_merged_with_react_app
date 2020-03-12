@@ -124,8 +124,7 @@ const resetLink = (req, res) => {
                     subject: 'Testing the RESET LINK',
                     text: 'GET RESET HASH',
                     // Tuka treba link do druga komponenta kade sto ke se vnese nov pass i posle post povik da se zapise noviot pass
-                    html: `<p>${reset_hash}</p>`,
-                    html: `<a href="http://localhost:8081/api/v1/auth/reset-password">${reset_hash} - Click here to reset your password</a>`,
+                    html: `<a href="http://localhost:3000/resetpassword/${reset_hash}/${req.body.email}">${reset_hash} - Click here to reset your password</a>`,
                     };
                     sgMail.send(msg);
                 return res.status(200).send('ok');
@@ -144,7 +143,40 @@ const resetLink = (req, res) => {
 }
 
 const resetPassword = (req, res) => {
-    return res.status(200).send('ok');
+    if(req.body.pass1 === req.body.pass2) {
+        bcrypt.genSalt(10, function(err, salt) {
+            if(err){
+                throw new Error(err);
+                return
+            }
+            bcrypt.hash(req.body.pass1, salt, function(err, hash) {
+                if(err){
+                    throw new Error(err);
+                    return
+                }
+                // Mu se prakja reset_hash i noviot password kao hash 
+                // (Naogja koj pass treba da se smeni spored toa koj user go ima ovoj reset_hash)
+                mUsers.resetPassword(req.body.reset_hash, hash)
+                .then(() => {
+                    sgMail.setApiKey(config.getConfig('mailer').key);
+                    let msg = {
+                    to: req.body.email,
+                    from: 'metodijalichovski@gmail.com',
+                    subject: 'Testing the SENDGRID',
+                    text: 'You have changed your password',
+                    };
+                    sgMail.send(msg);
+                })
+                .then(data => {
+                    // console.log(data)
+                    return res.status(201).send('ok');
+                })
+                .catch(err => {
+                    return res.status(500).send('Something went wrong');
+                })
+            })
+        });
+    }
 }
 
 const changePassword = (req, res) => {
