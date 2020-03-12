@@ -54,7 +54,7 @@ const confirmUserAccount = (hash) => {
 
 const resetPasswordHash = (email, reset_hash) => {
     return new Promise((success, fail) => {
-        User.updateOne({email: email}, {reset_hash: reset_hash}, (err) => {
+        User.updateOne({email: email}, {reset_hash: reset_hash, _modified: new Date()}, (err) => {
             if(err) {
                 return fail(err);
             }

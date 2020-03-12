@@ -134,11 +134,12 @@ const resetLink = (req, res) => {
                 return res.status(500).send('Could not send email');
             })
         } else {
-            return res.status(500).send('This email has not been used to register an account');
+            throw new Error('This email has not been used to register an account');
         }
     })
     .catch(err => {
-        throw new Error(err);
+        console.log(err);
+        return res.status(500).send({err});
     });
 }
 
