@@ -28,6 +28,7 @@ const Routes = () => {
                 <Route exact path='/expences' render={() => <Expences component={Navbar}/>}/>
                 <Route exact path='/newproduct' render={() => <NewProduct component={Navbar}/>}/>
                 <Route exact path='/editproduct' render={() => <NewProduct component={Navbar}/>}/>
+                {/* <Route exact path='/userinfo' render={}/> */}
                 <Route path='/resetpassword/:resethash/:email' component={ResetPasswordInputs} />
             </Switch>
         </Router>
