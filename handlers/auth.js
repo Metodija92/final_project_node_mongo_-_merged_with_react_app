@@ -82,7 +82,16 @@ const login = (req, res) => {
                     email: data.email
                 };
                 var token = jwt.sign(tokenData, config.getConfig('jwt').key);
-                return res.status(200).send({jwt: token, first_name: data.first_name, last_name: data.last_name});
+                return res.status(200).send({
+                    jwt: token, 
+                    first_name: data.first_name, 
+                    last_name: data.last_name,
+                    email: data.email,
+                    status: data.confirmed,
+                    birthday: data.birthday,
+                    country: data.country,
+                    telephone: data.telephone
+                });
             }
             return res.status(400).send('not found');
         });

@@ -66,7 +66,7 @@ class Products extends React.Component {
                     ? <Alert deleteAlert={this.deleteAlert} productDeleted={this.productDeleted} />
                     : null}
                 {/* *****Narednava linija ja renderira <Navbar/> a toggle mu treba za da se dodade klasa na kopceto Products da bide zeleno*****  */}
-                <this.props.component toggle={true} />
+                <this.props.component toggle={'products'} />
                 <div id="products">
                     <div id="products-header">
                         <h1>Products</h1>

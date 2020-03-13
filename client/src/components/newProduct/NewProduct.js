@@ -69,7 +69,7 @@ class NewProduct extends React.Component {
         return (
             <React.Fragment>
                 {/* *****Narednava linija ja renderira <Navbar/> a toggle mu treba za da se dodade klasa na kopceto Products da bide zeleno*****  */}
-                <this.props.component toggle={true} />
+                <this.props.component toggle={'products'} />
                 <div id="newproduct-header">
                     <h1>New Product</h1>
                 </div>

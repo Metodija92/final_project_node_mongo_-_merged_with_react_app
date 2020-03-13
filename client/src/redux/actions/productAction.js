@@ -57,6 +57,11 @@ export const userLoginIn = (email, password, history) => {
             cookies.set('name', res.data.first_name);
             cookies.set('lastName', res.data.last_name);
             cookies.set('jwt', res.data.jwt);
+            cookies.set('email', res.data.email);
+            cookies.set('status', res.data.status);
+            cookies.set('birthday', res.data.birthday);
+            cookies.set('country', res.data.country);
+            cookies.set('telephone', res.data.telephone);
         })
         .then(() => {
             history.push("/products")

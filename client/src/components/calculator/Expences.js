@@ -85,7 +85,7 @@ class Expences extends React.Component {
         return (
             <React.Fragment>
                 {/* *****Narednava linija ja renderira <Navbar/> a toggle mu treba za da se dodade klasa na kopceto Expences da bide zeleno*****  */}
-                <this.props.component toggle={false} />
+                <this.props.component toggle={'expences'} />
                 <div id="expenses">
                     <div id="expenses-header-one">
                         <h1>Expenses</h1>
