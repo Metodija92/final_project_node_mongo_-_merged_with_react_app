@@ -16,7 +16,8 @@ class Navbar extends React.Component {
         super(props),
             this.state = {
                 toggle: this.props.toggle,
-                showLogOut: false
+                showLogOut: false,
+                isOpen: false
             }
     }
 
@@ -39,6 +40,14 @@ class Navbar extends React.Component {
         this.setState({ showLogOut: !this.state.showLogOut })
     }
 
+    handleOpen = () => {
+        this.setState({ isOpen: true })
+      }
+    
+    handleClose = () => {
+        this.setState({ isOpen: false })
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -49,22 +58,30 @@ class Navbar extends React.Component {
                 <div className="navbar-container">
                     <nav className="navbar">
                         <div className="button-container">
-                            <Link to='/products'>
+                            <Link to='/products' className='navbar-link'>
                                 <button className={this.state.toggle ? "navbar-button active" : "navbar-button"} onClick={this.setProductsActive}>
                                     PRODUCTS
                                 </button>
                             </Link>
-                            <Link to='/expences'>
+                            <Link to='/expences' className='navbar-link'>
                                 <button className={!this.state.toggle ? "navbar-button active" : "navbar-button"} onClick={this.setExpencesActive}>
                                     EXPENSES
                                 </button>
                             </Link>
                         </div>
-                        <div className="profile-container">
+                        <div className="profile-container" onMouseEnter = { this.handleOpen }
+                            onMouseLeave = { this.handleClose }>
                             <img src={galgadot} alt="#" className="profile-picture" />
-                            <a href="#" className="user-name" onClick={this.showLogOut}>
-                                {cookies.get('name') + ' ' + cookies.get('lastName')}</a>
+                            <a href="#" className="user-name">
+                                {cookies.get('name') + ' ' + cookies.get('lastName')}
+                            </a>
                         </div>
+                    {this.state.isOpen ?
+                        <div id='dropdown-menu' onMouseEnter = { this.handleOpen } onMouseLeave = { this.handleClose }>
+                        <button className='user-info-btn'>User Info</button>
+                        <button className='user-info-btn' onClick={this.showLogOut}>Sign Out</button>
+                    </div> :
+                    null}
                     </nav>
                 </div>
             </React.Fragment>
