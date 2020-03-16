@@ -98,7 +98,6 @@ const changePassword = (email, hash) => {
 
 const updateUserInfo = (first_name, last_name, email, birthday, telephone, country) => {
     return new Promise((success, fail) => {
-        console.log(`${email} od model`)
         User.updateOne
         ({email: email}, {
             first_name: first_name, 
@@ -108,13 +107,13 @@ const updateUserInfo = (first_name, last_name, email, birthday, telephone, count
             telephone: telephone,
             country: country,
             _modified: new Date()
-        }, (err) => {
-            if(err){
-                return fail(err);
-            }
-            console.log('ok od model')
+        }).then((result) => {
+            console.log('Result: ', result);
             return success();
-        })
+        }).catch((err) => {
+            console.log('Err: ', result);
+            return fail(err);
+        });
     })
 }
  

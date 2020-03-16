@@ -256,7 +256,7 @@ const updateInfo = (req, res) => {
         if(mathced) {
             console.log(req.body.email + " od handler")
             // console.log(req.body.last_name)
-            mUsers.updateUserInfo(
+            return mUsers.updateUserInfo(
                 req.body.first_name, 
                 req.body.last_name, 
                 req.body.email, 
