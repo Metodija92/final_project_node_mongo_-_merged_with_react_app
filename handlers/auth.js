@@ -254,8 +254,6 @@ const updateInfo = (req, res) => {
     val.check()
     .then(mathced => {
         if(mathced) {
-            console.log(req.body.email + " od handler")
-            // console.log(req.body.last_name)
             return mUsers.updateUserInfo(
                 req.body.first_name, 
                 req.body.last_name, 
@@ -264,13 +262,11 @@ const updateInfo = (req, res) => {
                 req.body.telephone,
                 req.body.country
             )
-            console.log('zapishuva')
         } else {
             throw new Error('Validation failed');
         }
     })
     .then(() => {
-        console.log('ok od handler')
         return res.status(200).send('ok');
     })
     .catch(err => {
