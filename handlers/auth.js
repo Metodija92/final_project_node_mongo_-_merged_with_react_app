@@ -189,38 +189,54 @@ const resetPassword = (req, res) => {
 }
 
 const changePassword = (req, res) => {
-    if(req.body.pass1 === req.body.pass2) {
-        bcrypt.genSalt(10, function(err, salt) {
+    mUsers.getUserPasswordByEmail(req.body.email)
+    .then((data) => {
+        bcrypt.compare(req.body.oldPass, data.password, (err, result) => {
             if(err){
-                throw new Error(err);
-                return
+                return res.status(500).send('Could not compare passwords');
             }
-            bcrypt.hash(req.body.pass1, salt, function(err, hash) {
-                if(err){
-                    throw new Error(err);
-                    return
+            if(result){
+                if(req.body.pass1 === req.body.pass2) {
+                    bcrypt.genSalt(10, function(err, salt) {
+                        if(err){
+                            throw new Error(err);
+                            return
+                        }
+                        bcrypt.hash(req.body.pass1, salt, function(err, hash) {
+                            if(err){
+                                throw new Error(err);
+                                return
+                            }
+                            mUsers.changePassword(req.body.email, hash)
+                            .then(() => {
+                                sgMail.setApiKey(config.getConfig('mailer').key);
+                                let msg = {
+                                to: req.body.email,
+                                from: 'metodijalichovski@gmail.com',
+                                subject: 'Password Change',
+                                text: 'You have changed your password',
+                                };
+                                sgMail.send(msg);
+                            })
+                            .then(data => {
+                                return res.status(201).send('ok');;
+                            })
+                            .catch(err => {
+                                console.log('PADNA!!!!!!!!!!!!!!!!');
+                                console.log(err);
+                                // return res.status(500).send('Something went wrong');
+                                throw new Error(err);
+                            })
+                        })
+                    });
                 }
-                mUsers.changePassword(req.body.email, hash)
-                .then(() => {
-                    sgMail.setApiKey(config.getConfig('mailer').key);
-                    let msg = {
-                    to: req.body.email,
-                    from: 'metodijalichovski@gmail.com',
-                    subject: 'Password Change',
-                    text: 'You have changed your password',
-                    };
-                    sgMail.send(msg);
-                })
-                .then(data => {
-                    // console.log(data)
-                    return res.status(201).send('ok');
-                })
-                .catch(err => {
-                    return res.status(500).send('Something went wrong');
-                })
-            })
+            }
         });
-    }
+    })
+    .catch(err => {
+        console.log(err);
+        return res.status(500).send(err);
+    });
 }
 
 const confirm = (req, res) => {

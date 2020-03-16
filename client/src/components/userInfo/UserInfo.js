@@ -48,13 +48,13 @@ class UserInfo extends React.Component {
                 <div id='user-info-container'>
                     <div id='user-info'>
                         <img src={galgadot} alt="#" id='user-info-pic'/>
-                        <input type='text' id='first_name' defaultValue={cookies.get('name')}/>
-                        <input type='text' id='last_name' defaultValue={cookies.get('lastName')}/>
-                        <input type='email' id='email' defaultValue={cookies.get('email')}/>
-                        <input type='date' id='birthday' defaultValue={this.formatDate()}/>
-                        <input type='text' id='telephone' defaultValue={cookies.get('telephone')}/>
-                        <input type='text' id='country' defaultValue={cookies.get('country')}/>
-                        <input type='text' defaultValue={this.state.accountStatus ? 'Account confirmed' : 'Account not confirmed'} readOnly={true}/>
+                        <input type='text' className='text-field-input' id='first_name' defaultValue={cookies.get('name')}/>
+                        <input type='text' className='text-field-input' id='last_name' defaultValue={cookies.get('lastName')}/>
+                        <input type='email' className='text-field-input' id='email' defaultValue={cookies.get('email')}/>
+                        <input type='date' className='text-field-input' id='birthday' defaultValue={this.formatDate()}/>
+                        <input type='text' className='text-field-input' id='telephone' defaultValue={cookies.get('telephone')}/>
+                        <input type='text' className='text-field-input' id='country' defaultValue={cookies.get('country')}/>
+                        <input type='text' className='text-field-input' defaultValue={this.state.accountStatus ? 'Account confirmed' : 'Account not confirmed'} readOnly={true}/>
                         {/* <input type='text' defaultValue='what to put....?'/> */}
                         <button className='user-info-btn'>Save Changes</button>
                         <button className='user-info-btn' onClick={this.openChangePasswordModal}>Change password</button>

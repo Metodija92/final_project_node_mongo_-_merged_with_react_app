@@ -13,6 +13,7 @@ const ChangePassword = (props) => {
 
     const changeUserPassword = () => {
         axios.post('http://localhost:8081/api/v1/auth/change-password', {
+            oldPass: oldPass,
             pass1: pass1,
             pass2: pass2,
             email: cookies.get('email')
