@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios'
+
 import ChangePassword from './ChangePassword'
 import galgadot from '../../assets/images/galgadot.jpg';
 
@@ -23,14 +25,14 @@ class UserInfo extends React.Component {
         super()
         this.state = {
             accountStatus: cookies.get('status'),
+            first_name: cookies.get('name'),
+            last_name: cookies.get('lastName'),
+            email: cookies.get('email'),
+            birthday: cookies.get('birthday').slice(0, 10),
+            telephone: cookies.get('telephone'),
+            country: cookies.get('country'),
             isOpen: false
         }
-    }
-
-    formatDate = () => {
-        let fullDate = cookies.get('birthday')
-        let date = fullDate.slice(0, 10)
-        return date
     }
 
     saveInputValue = (event) => {
@@ -41,6 +43,24 @@ class UserInfo extends React.Component {
         this.setState({isOpen: !this.state.isOpen});
     }
 
+    updateUserInfo = () => {
+        console.log(this.state.first_name)
+        axios.post('http://localhost:8081/api/v1/auth/update-user-info', {
+                first_name: this.state.first_name,
+                last_name: this.state.last_name,
+                email: this.state.email,
+                birthday:this.state.birthday,
+                telephone: this.state.telephone,
+                country: this.state.country
+            }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
+        .then(() => {
+            alert('You have changed your personal info');
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -48,15 +68,15 @@ class UserInfo extends React.Component {
                 <div id='user-info-container'>
                     <div id='user-info'>
                         <img src={galgadot} alt="#" id='user-info-pic'/>
-                        <input type='text' className='text-field-input' id='first_name' defaultValue={cookies.get('name')}/>
-                        <input type='text' className='text-field-input' id='last_name' defaultValue={cookies.get('lastName')}/>
-                        <input type='email' className='text-field-input' id='email' defaultValue={cookies.get('email')}/>
-                        <input type='date' className='text-field-input' id='birthday' defaultValue={this.formatDate()}/>
-                        <input type='text' className='text-field-input' id='telephone' defaultValue={cookies.get('telephone')}/>
-                        <input type='text' className='text-field-input' id='country' defaultValue={cookies.get('country')}/>
-                        <input type='text' className='text-field-input' defaultValue={this.state.accountStatus ? 'Account confirmed' : 'Account not confirmed'} readOnly={true}/>
+                        <input type='text' className='text-field-input' id='first_name' defaultValue={this.state.first_name} onChange={this.saveInputValue}/>
+                        <input type='text' className='text-field-input' id='last_name' defaultValue={this.state.last_name} onChange={this.saveInputValue}/>
+                        <input type='email' className='text-field-input' id='email' defaultValue={this.state.email} onChange={this.saveInputValue}/>
+                        <input type='date' className='text-field-input' id='birthday' defaultValue={this.state.birthday} onChange={this.saveInputValue}/>
+                        <input type='text' className='text-field-input' id='telephone' defaultValue={this.state.telephone} onChange={this.saveInputValue}/>
+                        <input type='text' className='text-field-input' id='country' defaultValue={this.state.country} onChange={this.saveInputValue}/>
+                        <input type='text' className='text-field-input' defaultValue={this.state.accountStatus ==='true' ? 'Account confirmed' : 'Account not confirmed'} readOnly={true}/>
                         {/* <input type='text' defaultValue='what to put....?'/> */}
-                        <button className='user-info-btn'>Save Changes</button>
+                        <button className='user-info-btn' onClick={this.updateUserInfo}>Save Changes</button>
                         <button className='user-info-btn' onClick={this.openChangePasswordModal}>Change password</button>
                     </div>
                     <Modal isOpen={this.state.isOpen} style={customStyles}>

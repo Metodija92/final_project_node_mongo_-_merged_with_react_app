@@ -95,6 +95,28 @@ const changePassword = (email, hash) => {
         })
     })
 }
+
+const updateUserInfo = (first_name, last_name, email, birthday, telephone, country) => {
+    return new Promise((success, fail) => {
+        console.log(`${email} od model`)
+        User.updateOne
+        ({email: email}, {
+            first_name: first_name, 
+            last_name: last_name,
+            email: email,
+            birthday: birthday,
+            telephone: telephone,
+            country: country,
+            _modified: new Date()
+        }, (err) => {
+            if(err){
+                return fail(err);
+            }
+            console.log('ok od model')
+            return success();
+        })
+    })
+}
  
 
 module.exports = {
@@ -104,5 +126,6 @@ module.exports = {
     resetPasswordHash,
     resetPassword,
     getEmailAfterReset,
-    changePassword
+    changePassword,
+    updateUserInfo
 }

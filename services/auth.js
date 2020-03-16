@@ -36,6 +36,7 @@ api.get('/api/v1/auth/renew', auth.renew);
 api.post('/api/v1/auth/reset-link', auth.resetLink);
 api.post('/api/v1/auth/reset-password', auth.resetPassword);
 api.post('/api/v1/auth/change-password', auth.changePassword);
+api.post('/api/v1/auth/update-user-info', auth.updateInfo);
 
 
 api.listen(8081, err => {

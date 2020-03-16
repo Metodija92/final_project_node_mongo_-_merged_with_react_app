@@ -12,21 +12,25 @@ const ChangePassword = (props) => {
     const [pass2, setPass2] = useState('')
 
     const changeUserPassword = () => {
-        axios.post('http://localhost:8081/api/v1/auth/change-password', {
-            oldPass: oldPass,
-            pass1: pass1,
-            pass2: pass2,
-            email: cookies.get('email')
-        }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
-        .then(() => {
-            alert('You have changed your password');
-            props.closeModal();
-        })
-        .catch(err => {
-            console.log(err);
-        });
-        console.log(pass1)
-        console.log(pass2)
+        if(pass1 === pass2) {
+            axios.post('http://localhost:8081/api/v1/auth/change-password', {
+                oldPass: oldPass,
+                pass1: pass1,
+                pass2: pass2,
+                email: cookies.get('email')
+            }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
+            .then(() => {
+                alert('You have changed your password');
+                props.closeModal();
+            })
+            .catch(err => {
+                console.log(err);
+            });
+            console.log(pass1)
+            console.log(pass2)
+        } else {
+            alert('Passwords don\'t match!');
+        }
     }
 
     return (

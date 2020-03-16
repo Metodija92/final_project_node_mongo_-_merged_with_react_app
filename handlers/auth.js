@@ -9,7 +9,7 @@ const sgMail = require('@sendgrid/mail');
 
 
 const register = (req, res) => {
-    var v = new validator.Validator(req.body, vUsers.createUser);
+    let v = new validator.Validator(req.body, vUsers.createUser);
     v.check()
     .then(matched => {
         if(matched) {
@@ -222,7 +222,6 @@ const changePassword = (req, res) => {
                                 return res.status(201).send('ok');;
                             })
                             .catch(err => {
-                                console.log('PADNA!!!!!!!!!!!!!!!!');
                                 console.log(err);
                                 // return res.status(500).send('Something went wrong');
                                 throw new Error(err);
@@ -250,6 +249,36 @@ const confirm = (req, res) => {
     })
 }
 
+const updateInfo = (req, res) => {
+    let val = new validator.Validator(req.body, vUsers.updateUser);
+    val.check()
+    .then(mathced => {
+        if(mathced) {
+            console.log(req.body.email + " od handler")
+            // console.log(req.body.last_name)
+            mUsers.updateUserInfo(
+                req.body.first_name, 
+                req.body.last_name, 
+                req.body.email, 
+                req.body.birthday, 
+                req.body.telephone,
+                req.body.country
+            )
+            console.log('zapishuva')
+        } else {
+            throw new Error('Validation failed');
+        }
+    })
+    .then(() => {
+        console.log('ok od handler')
+        return res.status(200).send('ok');
+    })
+    .catch(err => {
+        console.log(err);
+        return res.status(500).send(v.errors);
+    });
+}
+
 
 module.exports = {
     register,
@@ -259,5 +288,6 @@ module.exports = {
     resetPassword,
     changePassword,
     userInfo,
-    confirm
+    confirm,
+    updateInfo
 }
