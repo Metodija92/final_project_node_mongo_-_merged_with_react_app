@@ -85,6 +85,17 @@ const getEmailAfterReset = (pass_hash) => {
     })
 }
 
+const changePassword = (email, hash) => {
+    return new Promise((success, fail) => {
+        User.updateOne({email: email}, {password: hash, _modified: new Date()}, (err) => {
+            if(err){
+                return fail(err);
+            }
+            return success();
+        })
+    })
+}
+ 
 
 module.exports = {
     createUser,
@@ -92,5 +103,6 @@ module.exports = {
     confirmUserAccount,
     resetPasswordHash,
     resetPassword,
-    getEmailAfterReset
+    getEmailAfterReset,
+    changePassword
 }

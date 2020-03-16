@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Metodija92/FinalProject_node-mongo#readme",
   "dependencies": {
+    "@sendgrid/mail": "^6.5.4",
     "bcryptjs": "2.4.3",
     "cors": "2.8.5",
     "express": "4.17.1",
@@ -27,6 +28,7 @@
     "jsonwebtoken": "8.5.1",
     "mongoose": "5.7.8",
     "node-input-validator": "4.1.0",
+    "randomstring": "1.1.5",
     "redux-thunk": "2.3.0"
   }
 }

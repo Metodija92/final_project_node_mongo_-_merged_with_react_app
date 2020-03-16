@@ -7,7 +7,6 @@
 
 #user-info-container {
     width: 100%;
-    height: 100%;
     display: flex;
 }
 
@@ -16,7 +15,8 @@
     height: 650px;
     background-color: #fff;
     margin-top: 25px;
-    margin-left: 25px;
+    margin-left: auto;
+    margin-right: auto;
     padding: 25px;
     display: flex;
     flex-direction: column;
