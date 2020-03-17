@@ -8,8 +8,6 @@ import Modal from 'react-modal';
 
 import '../../assets/css/Login.css'
 
-import Cookies from 'universal-cookie';
-const cookies = new Cookies();
 
 const customStyles = {
     content : {
@@ -55,7 +53,6 @@ class Login extends React.Component {
             this.state.password,
             this.props.history
         );
-        cookies.set('cookieTest', 'Kolache');
     }
 
     resetModal = () => {

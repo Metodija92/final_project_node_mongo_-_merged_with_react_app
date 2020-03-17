@@ -254,14 +254,7 @@ const updateInfo = (req, res) => {
     val.check()
     .then(mathced => {
         if(mathced) {
-            return mUsers.updateUserInfo(
-                req.body.first_name, 
-                req.body.last_name, 
-                req.body.email, 
-                req.body.birthday, 
-                req.body.telephone,
-                req.body.country
-            )
+            return mUsers.updateUserInfo(req.body)
         } else {
             throw new Error('Validation failed');
         }

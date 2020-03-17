@@ -51,17 +51,16 @@ export const userLoginIn = (email, password, history) => {
             password: password
         })
         .then(res=>{
-            // localStorage.setItem('jwt', res.data.jwt);
-            // localStorage.setItem('name', res.data.first_name);
-            // localStorage.setItem('lastName', res.data.last_name);
-            cookies.set('name', res.data.first_name);
-            cookies.set('lastName', res.data.last_name);
+            cookies.set('userInfo', {
+                'name': res.data.first_name,
+                'lastName': res.data.last_name,
+                'email': res.data.email,
+                'status': res.data.status,
+                'birthday': res.data.birthday,
+                'country': res.data.country,
+                'telephone': res.data.telephone
+            });
             cookies.set('jwt', res.data.jwt);
-            cookies.set('email', res.data.email);
-            cookies.set('status', res.data.status);
-            cookies.set('birthday', res.data.birthday);
-            cookies.set('country', res.data.country);
-            cookies.set('telephone', res.data.telephone);
         })
         .then(() => {
             history.push("/products")

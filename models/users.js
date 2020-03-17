@@ -96,24 +96,23 @@ const changePassword = (email, hash) => {
     })
 }
 
-const updateUserInfo = (first_name, last_name, email, birthday, telephone, country) => {
+const updateUserInfo = (data) => {
     return new Promise((success, fail) => {
         User.updateOne
-        ({email: email}, {
-            first_name: first_name, 
-            last_name: last_name,
-            email: email,
-            birthday: birthday,
-            telephone: telephone,
-            country: country,
-            _modified: new Date()
-        }).then((result) => {
-            console.log('Result: ', result);
+        ({email: data.email}, {$set: /* Moze i bez ova $set kako pogore, cisto za primer stoi tuka */
+            {first_name: data.first_name, 
+            last_name: data.last_name,
+            email: data.email,
+            birthday: data.birthday,
+            telephone: data.telephone,
+            country: data.country,
+            _modified: new Date()}
+        }, (err) => {
+            if(err){
+                return fail(err);
+            }
             return success();
-        }).catch((err) => {
-            console.log('Err: ', result);
-            return fail(err);
-        });
+        })
     })
 }
  

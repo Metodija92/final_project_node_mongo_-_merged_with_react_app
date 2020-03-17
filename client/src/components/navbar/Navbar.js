@@ -14,10 +14,11 @@ const cookies = new Cookies();
 class Navbar extends React.Component {
     constructor(props) {
         super(props),
-            this.state = {
-                toggle: this.props.toggle,
-                showLogOut: false
-            }
+        this.state = {
+            toggle: this.props.toggle,
+            showLogOut: false,
+            userInfo: cookies.get('userInfo')
+        }
     }
 
     setProductsActive = () => {
@@ -71,7 +72,7 @@ class Navbar extends React.Component {
                         <div className="profile-container" >
                             <img src={galgadot} alt="#" className="profile-picture" />
                             <Link to='userinfo' className="user-name"> 
-                                {cookies.get('name') + ' ' + cookies.get('lastName')}
+                                {this.state.userInfo.name + ' ' + this.state.userInfo.lastName}
                             </Link>
                             <i className="fas fa-sign-out-alt" id='log-out-btn' onClick={this.showLogOut}></i>
                         </div>

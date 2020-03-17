@@ -9,6 +9,7 @@ import Modal from 'react-modal';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
+
 const customStyles = {
     content : {
       top                   : '50%',
@@ -20,17 +21,18 @@ const customStyles = {
     }
 };
 
+
 class UserInfo extends React.Component {
     constructor() {
         super()
         this.state = {
-            accountStatus: cookies.get('status'),
-            first_name: cookies.get('name'),
-            last_name: cookies.get('lastName'),
-            email: cookies.get('email'),
-            birthday: cookies.get('birthday').slice(0, 10),
-            telephone: cookies.get('telephone'),
-            country: cookies.get('country'),
+            accountStatus: cookies.get('userInfo').status,
+            first_name: cookies.get('userInfo').name,
+            last_name: cookies.get('userInfo').lastName,
+            email: cookies.get('userInfo').email,
+            birthday: cookies.get('userInfo').birthday.slice(0, 10),
+            telephone: cookies.get('userInfo').telephone,
+            country: cookies.get('userInfo').country,
             isOpen: false
         }
     }
@@ -64,6 +66,7 @@ class UserInfo extends React.Component {
     render() {
         return (
             <React.Fragment>
+                {console.log()}
                 <this.props.component toggle={null}/>
                 <div id='user-info-container'>
                     <div id='user-info'>
