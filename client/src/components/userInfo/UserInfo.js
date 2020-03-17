@@ -71,16 +71,37 @@ class UserInfo extends React.Component {
                 <div id='user-info-container'>
                     <div id='user-info'>
                         <img src={galgadot} alt="#" id='user-info-pic'/>
-                        <input type='text' className='text-field-input' id='first_name' defaultValue={this.state.first_name} onChange={this.saveInputValue}/>
-                        <input type='text' className='text-field-input' id='last_name' defaultValue={this.state.last_name} onChange={this.saveInputValue}/>
-                        <input type='email' className='text-field-input' id='email' defaultValue={this.state.email} onChange={this.saveInputValue}/>
-                        <input type='date' className='text-field-input' id='birthday' defaultValue={this.state.birthday} onChange={this.saveInputValue}/>
-                        <input type='text' className='text-field-input' id='telephone' defaultValue={this.state.telephone} onChange={this.saveInputValue}/>
-                        <input type='text' className='text-field-input' id='country' defaultValue={this.state.country} onChange={this.saveInputValue}/>
-                        <input type='text' className='text-field-input' defaultValue={this.state.accountStatus ==='true' ? 'Account confirmed' : 'Account not confirmed'} readOnly={true}/>
+                        <p>
+                            <label className="text-field-label" >First Name</label>
+                            <input type='text' className='text-field-input' id='first_name' defaultValue={this.state.first_name} onChange={this.saveInputValue}/>
+                        </p>
+                        <p>
+                            <label className="text-field-label" >Last Name</label>
+                            <input type='text' className='text-field-input' id='last_name' defaultValue={this.state.last_name} onChange={this.saveInputValue}/>
+                        </p>
+                        <p>
+                            <label className="text-field-label" >Date of Birth</label>
+                            <input type='date' className='text-field-input' id='birthday' defaultValue={this.state.birthday} onChange={this.saveInputValue}/>
+                        </p>
+                        <p>
+                            <label className="text-field-label" >Telephone</label> 
+                            <input type='text' className='text-field-input' id='telephone' defaultValue={this.state.telephone} onChange={this.saveInputValue}/>
+                        </p>
+                        <p>
+                            <label className="text-field-label" >Country</label>
+                            <input type='text' className='text-field-input' id='country' defaultValue={this.state.country} onChange={this.saveInputValue}/>
+                        </p>
+                        <p>
+                            <label className="text-field-label" >E-mail</label>
+                            <input type='email' className='text-field-input' id='email' defaultValue={this.state.email} onChange={this.saveInputValue} readOnly={true}/>
+                        </p>
+                        <p>
+                            <label className="text-field-label" >Account Status</label>
+                            <input type='text' className='text-field-input' defaultValue={this.state.accountStatus ==='true' ? 'Account confirmed' : 'Account not confirmed'} readOnly={true}/>
+                        </p>
                         {/* <input type='text' defaultValue='what to put....?'/> */}
-                        <button className='user-info-btn' onClick={this.updateUserInfo}>Save Changes</button>
-                        <button className='user-info-btn' onClick={this.openChangePasswordModal}>Change password</button>
+                        <button className='user-info-btn' onClick={this.updateUserInfo} disabled={this.state.accountStatus !=='true' ? true : false}>Save Changes</button>
+                        <button className='user-info-btn' onClick={this.openChangePasswordModal} disabled={this.state.accountStatus !=='true' ? true : false}>Change password</button>
                     </div>
                     <Modal isOpen={this.state.isOpen} style={customStyles}>
                         <ChangePassword closeModal={this.openChangePasswordModal}/>
