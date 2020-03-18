@@ -5,6 +5,8 @@ import ChangePassword from './ChangePassword'
 import galgadot from '../../assets/images/galgadot.jpg';
 
 import '../../assets/css/UserInfo.css'
+
+import Popover from 'react-tiny-popover'
 import Modal from 'react-modal';
 import Cookies from 'universal-cookie';
 
@@ -33,7 +35,9 @@ class UserInfo extends React.Component {
             birthday: cookies.get('userInfo').birthday.slice(0, 10),
             telephone: cookies.get('userInfo').telephone,
             country: cookies.get('userInfo').country,
-            isOpen: false
+            isOpen: false,
+            topPopOverOpen: false,
+            botPopOverOpen: false
         }
     }
 
@@ -43,6 +47,14 @@ class UserInfo extends React.Component {
 
     openChangePasswordModal = () => {
         this.setState({isOpen: !this.state.isOpen});
+    }
+
+    openTopPopOver = () => {
+        this.setState({topPopOverOpen: !this.state.topPopOverOpen})
+    }
+
+    openBotPopOver = () => {
+        this.setState({botPopOverOpen: !this.state.botPopOverOpen})
     }
 
     updateUserInfo = () => {
@@ -66,7 +78,6 @@ class UserInfo extends React.Component {
     render() {
         return (
             <React.Fragment>
-                {console.log()}
                 <this.props.component toggle={null}/>
                 <div id='user-info-container'>
                     <div id='user-info'>
@@ -97,11 +108,40 @@ class UserInfo extends React.Component {
                         </p>
                         <p>
                             <label className="text-field-label" >Account Status</label>
-                            <input type='text' className='text-field-input' defaultValue={this.state.accountStatus ==='true' ? 'Account confirmed' : 'Account not confirmed'} readOnly={true}/>
+                            <input type='text' className='text-field-input' defaultValue={this.state.accountStatus ? 'Account confirmed' : 'Account not confirmed'} readOnly={true}/>
                         </p>
                         {/* <input type='text' defaultValue='what to put....?'/> */}
-                        <button className='user-info-btn' onClick={this.updateUserInfo} disabled={this.state.accountStatus !=='true' ? true : false}>Save Changes</button>
-                        <button className='user-info-btn' onClick={this.openChangePasswordModal} disabled={this.state.accountStatus !=='true' ? true : false}>Change password</button>
+                        <Popover
+                            isOpen={this.state.topPopOverOpen}
+                            onClickOutside={() => this.setState({ topPopOverOpen: false })}
+                            position={'top'}
+                            align={'center'}
+                            containerClassName={'pop-over-container'}
+                            content={(
+                                <div className='pop-over-div'>
+                                    You must confirm your account in order to change user info and/or password!
+                                </div>
+                            )}
+                        >
+                            <button className='user-info-btn' onClick={this.state.accountStatus ? this.updateUserInfo : this.openTopPopOver} >Save Changes</button>
+                        </Popover>
+                        <Popover
+                            isOpen={this.state.botPopOverOpen}
+                            onClickOutside={() => this.setState({ botPopOverOpen: false })}
+                            position={'top'}
+                            align={'center'}
+                            containerClassName={'pop-over-container'}
+                            content={(
+                                <div className='pop-over-div'>
+                                    You must confirm your account in order to change user info and/or password!
+                                </div>
+                            )}
+                        >
+                            <button className='user-info-btn' onClick={this.state.accountStatus ? this.openChangePasswordModal : this.openBotPopOver} >Change password</button>
+                        </Popover>
+                        {/* Treba da najdam nacin kako samo so btn disabled da gi napravam ... */}
+                        {/* <button className='user-info-btn' onClick={this.updateUserInfo} disabled={this.state.accountStatus !=='true' ? true : false}>Save Changes</button> */}
+                        {/* <button className='user-info-btn' onClick={this.openChangePasswordModal} disabled={this.state.accountStatus !=='true' ? true : false}>Change password</button> */}
                     </div>
                     <Modal isOpen={this.state.isOpen} style={customStyles}>
                         <ChangePassword closeModal={this.openChangePasswordModal}/>
