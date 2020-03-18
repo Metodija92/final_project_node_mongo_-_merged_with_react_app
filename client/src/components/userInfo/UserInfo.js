@@ -35,7 +35,8 @@ class UserInfo extends React.Component {
             birthday: cookies.get('userInfo').birthday.slice(0, 10),
             telephone: cookies.get('userInfo').telephone,
             country: cookies.get('userInfo').country,
-            isOpen: false,
+            passwordChange: false,
+            infoChanged: false,
             topPopOverOpen: false,
             botPopOverOpen: false
         }
@@ -46,7 +47,7 @@ class UserInfo extends React.Component {
     }
 
     openChangePasswordModal = () => {
-        this.setState({isOpen: !this.state.isOpen});
+        this.setState({passwordChange: !this.state.passwordChange});
     }
 
     openTopPopOver = () => {
@@ -68,8 +69,7 @@ class UserInfo extends React.Component {
                 country: this.state.country
             }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(() => {
-            // Change alert to modal
-            alert('You have changed your personal info');
+            this.setState({infoChanged: true});
             cookies.set('userInfo', {
                 'name': this.state.first_name,
                 'lastName': this.state.last_name,
@@ -153,8 +153,14 @@ class UserInfo extends React.Component {
                         {/* <button className='user-info-btn' onClick={this.updateUserInfo} disabled={this.state.accountStatus !=='true' ? true : false}>Save Changes</button> */}
                         {/* <button className='user-info-btn' onClick={this.openChangePasswordModal} disabled={this.state.accountStatus !=='true' ? true : false}>Change password</button> */}
                     </div>
-                    <Modal isOpen={this.state.isOpen} style={customStyles}>
+                    <Modal isOpen={this.state.passwordChange} style={customStyles}>
                         <ChangePassword closeModal={this.openChangePasswordModal}/>
+                    </Modal>
+                    <Modal isOpen={this.state.infoChanged} style={customStyles}>
+                            <div className='info-changed-container'>
+                                <h3>You have successfuly updated your personal info</h3>
+                                <button className='user-info-btn' style={{'width': '200px'}} onClick={() => {this.setState({infoChanged: false})}}>OK</button>
+                            </div>
                     </Modal>
                 </div>
             </React.Fragment>
