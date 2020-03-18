@@ -59,7 +59,7 @@ class UserInfo extends React.Component {
 
     updateUserInfo = () => {
         console.log(this.state.first_name)
-        axios.post('http://localhost:8081/api/v1/auth/update-user-info', {
+        axios.patch('http://localhost:8081/api/v1/auth/update-user-info', {
                 first_name: this.state.first_name,
                 last_name: this.state.last_name,
                 email: this.state.email,
@@ -68,7 +68,17 @@ class UserInfo extends React.Component {
                 country: this.state.country
             }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(() => {
+            // Change alert to modal
             alert('You have changed your personal info');
+            cookies.set('userInfo', {
+                'name': this.state.first_name,
+                'lastName': this.state.last_name,
+                'email': this.state.email,
+                'status': this.state.accountStatus,
+                'birthday': this.state.birthday,
+                'country': this.state.country,
+                'telephone': this.state.telephone
+            });
         })
         .catch(err => {
             console.log(err);
@@ -104,7 +114,7 @@ class UserInfo extends React.Component {
                         </p>
                         <p>
                             <label className="text-field-label" >E-mail</label>
-                            <input type='email' className='text-field-input' id='email' defaultValue={this.state.email} onChange={this.saveInputValue} readOnly={true}/>
+                            <input type='email' className='text-field-input' id='email' defaultValue={this.state.email} readOnly={true}/>
                         </p>
                         <p>
                             <label className="text-field-label" >Account Status</label>

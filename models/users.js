@@ -100,12 +100,7 @@ const updateUserInfo = (data) => {
     return new Promise((success, fail) => {
         User.updateOne
         ({email: data.email}, {$set: /* Moze i bez ova $set kako pogore, cisto za primer stoi tuka */
-            {first_name: data.first_name, 
-            last_name: data.last_name,
-            email: data.email,
-            birthday: data.birthday,
-            telephone: data.telephone,
-            country: data.country,
+            {...data,
             _modified: new Date()}
         }, (err) => {
             if(err){
