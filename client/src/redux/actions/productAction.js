@@ -137,6 +137,8 @@ export const getProductsSorted = (sortQuery) => {
     }
 }
 
+// axios.get(`http://localhost:8080/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc&subUser_id=${subUser_id}`
+
 export const getExpencesFiltered = (from, to) => {
     return async (dispatch) => {
         dispatch(getAllPostsStarted());
