@@ -1,6 +1,8 @@
 const mProducts = require('../models/products')
 
 const getAll = (req, res) => {
+    console.log(req.user);
+    console.log(req.user.id);
     let q = {user_id: req.user.id};
     let sort = {};
 

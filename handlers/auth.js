@@ -71,6 +71,7 @@ const register = (req, res) => {
 const login = (req, res) => {
     mUsers.getUserPasswordByEmail(req.body.email)
     .then((data) => {
+        console.log(`Vrakja: ${data}`)
         bcrypt.compare(req.body.password, data.password, (err, result) => {
             if(err){
                 return res.status(500).send('Could not compare passwords');

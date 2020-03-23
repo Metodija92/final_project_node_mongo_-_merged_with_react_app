@@ -100,7 +100,7 @@ export const userRegister = (firstName, lastName, email, password, birthday, tel
 export const getProductsCall = () => {
     return async (dispatch) => {
         dispatch(getAllPostsStarted());
-        axios.get("https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=purchaseDate:desc", 
+        axios.get("http://localhost:8080/api/v1/products/?sort=purchaseDate:desc", 
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -118,7 +118,7 @@ export const getProductsCall = () => {
 export const getProductsSorted = (sortQuery) => {
     return async (dispatch) => {
         dispatch(getAllPostsStarted());
-        axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=${sortQuery}`,
+        axios.get(`http://localhost:8080/api/v1/products/?sort=${sortQuery}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -140,7 +140,7 @@ export const getProductsSorted = (sortQuery) => {
 export const getExpencesFiltered = (from, to) => {
     return async (dispatch) => {
         dispatch(getAllPostsStarted());
-        axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc`,
+        axios.get(`http://localhost:8080/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -158,7 +158,7 @@ export const getExpencesFiltered = (from, to) => {
 export const createNewProduct = (name, type, description, date, price) => {
     return async (dispatch) => {
         dispatch(createOrEditStarted());
-        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/products/', {
+        axios.post('http://localhost:8080/api/v1/products/', {
             productName: name,
             productType: type,
             productDescription: description,
@@ -184,7 +184,7 @@ export const createNewProduct = (name, type, description, date, price) => {
 export const editExistingProduct = (id, name, type, description, date, price) => {
     return async (dispatch) => {
         dispatch(createOrEditStarted());
-        axios.put(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${id}`, {
+        axios.put(`http://localhost:8080/api/v1/products/${id}`, {
             productName: name,
             productType: type,
             productDescription: description,
@@ -214,7 +214,7 @@ export const editExistingProduct = (id, name, type, description, date, price) =>
 
 export const deleteProduct = (id) => {
     return async () => {
-        axios.delete(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${id}`,
+        axios.delete(`http://localhost:8080/api/v1/products/${id}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
             // console.log(res);
