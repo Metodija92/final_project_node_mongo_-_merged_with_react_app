@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const User = mongoose.model(
     'users',
     new mongoose.Schema({
+        user_type: String,
+        supervisor_id: String,
         first_name: String,
         last_name: String,
         email: String,

@@ -91,7 +91,10 @@ const login = (req, res) => {
                     status: data.confirmed,
                     birthday: data.birthday,
                     country: data.country,
-                    telephone: data.telephone
+                    telephone: data.telephone,
+                    user_type: data.user_type,
+                    user_id: data._id,
+                    supervisor_id: data.supervisor_id
                 });
             }
             return res.status(400).send('not found');

@@ -1,15 +1,17 @@
 import React from 'react'
 import { withRouter } from "react-router-dom"
 import { connect } from 'react-redux'
-import { userRegister } from '../../redux/actions/productAction'
+import { userRegister, subUserRegister } from '../../redux/actions/productAction'
 
 import '../../assets/css/Register.css'
 
 import ReactLoading from 'react-loading';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 class Register extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             first_name: null,
             last_name: null,
@@ -18,7 +20,7 @@ class Register extends React.Component {
             birthday: null,
             telephone: null,
             country: null,
-            redirect: false
+            loggedIn: this.props.loggedIn
         }
     }
 
@@ -39,15 +41,23 @@ class Register extends React.Component {
             alert('Please fill out all the fields')
         } else {
             event.preventDefault()
-            this.props.userRegister(
-                this.state.first_name,
-                this.state.last_name,
-                this.state.email.toLowerCase(),
-                this.state.password,
-                this.state.birthday,
-                this.state.telephone,
-                this.state.country,
-                this.props.history);
+            let createUserData = {
+                first_name: this.state.first_name,
+                last_name: this.state.last_name,
+                email: this.state.email.toLowerCase(),
+                password: this.state.password,
+                birthday: this.state.birthday,
+                telephone: this.state.telephone,
+                country: this.state.country
+            }
+            if(!this.state.loggedIn) {
+                this.props.userRegister(createUserData, this.props.history)
+            } else {
+                this.props.subUserRegister({...createUserData, supervisor_id: cookies.get('userInfo').user_id})
+                setTimeout(() => {
+                    this.props.closeRegisterModal()
+                }, 1000)
+            }  
         }
     }
 
@@ -94,11 +104,11 @@ class Register extends React.Component {
                             : null}
                     </div>
 
-                    <div className="aditional-info">
+                    {!this.state.loggedIn ? <div className="aditional-info">
                         <p>Or if you already have an account,
                             <button onClick={this.props.registerAccount} className="register-login">Sign In</button>.
                         </p>
-                    </div>
+                    </div> : null}
                 </div>
             </React.Fragment>
         )
@@ -114,8 +124,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        userRegister: (name, lastName, mail, password, birthday, phone, country, history) => {
-            dispatch(userRegister(name, lastName, mail, password, birthday, phone, country, history));
+        userRegister: (createUserData, history) => {
+            dispatch(userRegister(createUserData, history));
+        },
+        subUserRegister: (createUserData) => {
+            dispatch(subUserRegister(createUserData));
         }
     };
 }

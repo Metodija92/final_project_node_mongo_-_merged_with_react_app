@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios'
 
+import Register from '../home/Register'
 import ChangePassword from './ChangePassword'
 import galgadot from '../../assets/images/galgadot.jpg';
 
@@ -28,6 +29,7 @@ class UserInfo extends React.Component {
     constructor() {
         super()
         this.state = {
+            user_type: cookies.get('userInfo').user_type,
             accountStatus: cookies.get('userInfo').status,
             first_name: cookies.get('userInfo').name,
             last_name: cookies.get('userInfo').lastName,
@@ -37,7 +39,9 @@ class UserInfo extends React.Component {
             country: cookies.get('userInfo').country,
             passwordChange: false,
             infoChanged: false,
+            subUserRegisterModal: false,
             topPopOverOpen: false,
+            midPopOverOpen: false,
             botPopOverOpen: false
         }
     }
@@ -50,8 +54,16 @@ class UserInfo extends React.Component {
         this.setState({passwordChange: !this.state.passwordChange});
     }
 
+    subUserRegister = () => {
+        this.setState({subUserRegisterModal: !this.state.subUserRegisterModal})
+    }
+
     openTopPopOver = () => {
         this.setState({topPopOverOpen: !this.state.topPopOverOpen})
+    }
+
+    openMidPopOver = () => {
+        this.setState({midPopOverOpen: !this.state.midPopOverOpen})
     }
 
     openBotPopOver = () => {
@@ -94,11 +106,11 @@ class UserInfo extends React.Component {
                         <img src={galgadot} alt="#" id='user-info-pic'/>
                         <p>
                             <label className="text-field-label" >First Name</label>
-                            <input type='text' className='text-field-input' id='first_name' defaultValue={this.state.first_name} onChange={this.saveInputValue}/>
+                            <input type='text' className='text-field-input' id='first_name' defaultValue={this.state.first_name} onChange={this.saveInputValue} readOnly={this.state.user_type === 'user' ? true : false}/>
                         </p>
                         <p>
                             <label className="text-field-label" >Last Name</label>
-                            <input type='text' className='text-field-input' id='last_name' defaultValue={this.state.last_name} onChange={this.saveInputValue}/>
+                            <input type='text' className='text-field-input' id='last_name' defaultValue={this.state.last_name} onChange={this.saveInputValue} readOnly={this.state.user_type === 'user' ? true : false}/>
                         </p>
                         <p>
                             <label className="text-field-label" >Date of Birth</label>
@@ -136,8 +148,8 @@ class UserInfo extends React.Component {
                             <button className='user-info-btn' onClick={this.state.accountStatus ? this.updateUserInfo : this.openTopPopOver} >Save Changes</button>
                         </Popover>
                         <Popover
-                            isOpen={this.state.botPopOverOpen}
-                            onClickOutside={() => this.setState({ botPopOverOpen: false })}
+                            isOpen={this.state.midPopOverOpen}
+                            onClickOutside={() => this.setState({ midPopOverOpen: false })}
                             position={'top'}
                             align={'center'}
                             containerClassName={'pop-over-container'}
@@ -147,8 +159,24 @@ class UserInfo extends React.Component {
                                 </div>
                             )}
                         >
-                            <button className='user-info-btn' onClick={this.state.accountStatus ? this.openChangePasswordModal : this.openBotPopOver} >Change password</button>
+                            <button className='user-info-btn' onClick={this.state.accountStatus ? this.openChangePasswordModal : this.openMidPopOver} >Change password</button>
                         </Popover>
+                        {this.state.user_type === 'admin' ? 
+                            <Popover
+                            isOpen={this.state.botPopOverOpen}
+                            onClickOutside={() => this.setState({ botPopOverOpen: false })}
+                            position={'top'}
+                            align={'center'}
+                            containerClassName={'pop-over-container'}
+                            content={(
+                                    <div className='pop-over-div'>
+                                        You must confirm your account in order to create a Sub User Account!
+                                    </div>
+                                )}
+                            >
+                            <button className='user-info-btn' onClick={this.state.accountStatus ? this.subUserRegister : this.openBotPopOver} >Create Sub User Account</button>
+                            </Popover> : 
+                        null}
                         {/* Treba da najdam nacin kako samo so btn disabled da gi napravam ... */}
                         {/* <button className='user-info-btn' onClick={this.updateUserInfo} disabled={this.state.accountStatus !=='true' ? true : false}>Save Changes</button> */}
                         {/* <button className='user-info-btn' onClick={this.openChangePasswordModal} disabled={this.state.accountStatus !=='true' ? true : false}>Change password</button> */}
@@ -161,6 +189,9 @@ class UserInfo extends React.Component {
                                 <h3>You have successfuly updated your personal info</h3>
                                 <button className='user-info-btn' style={{'width': '200px'}} onClick={() => {this.setState({infoChanged: false})}}>OK</button>
                             </div>
+                    </Modal>
+                    <Modal isOpen={this.state.subUserRegisterModal} style={customStyles}>
+                        <Register loggedIn={true} closeRegisterModal={this.subUserRegister}/>
                     </Modal>
                 </div>
             </React.Fragment>

@@ -47,8 +47,8 @@ export function editThisProduct
 export const userLoginIn = (email, password, history) => {
     return async () => {
         axios.post('http://localhost:8081/api/v1/auth/login', {
-            email: email,
-            password: password
+            email,
+            password
         })
         .then(res=>{
             cookies.set('userInfo', {
@@ -58,12 +58,16 @@ export const userLoginIn = (email, password, history) => {
                 'status': res.data.status,
                 'birthday': res.data.birthday,
                 'country': res.data.country,
-                'telephone': res.data.telephone
+                'telephone': res.data.telephone,
+                'user_type': res.data.user_type,
+                'user_id': res.data.user_id,
+                'supervisor_id': res.data.supervisor_id
             });
             cookies.set('jwt', res.data.jwt);
         })
         .then(() => {
             history.push("/products")
+            console.log(cookies.get('userInfo'))
         })
         .catch(err=>{
             console.log(err)
@@ -71,22 +75,37 @@ export const userLoginIn = (email, password, history) => {
     }
 }
 
-export const userRegister = (firstName, lastName, email, password, birthday, telephone, country, history) => {
+export const userRegister = (createUserData, history) => {
     return async (dispatch) => {
         dispatch(createUserStarted());
         axios.post('http://localhost:8081/api/v1/auth/register', {
-            first_name: firstName,
-            last_name: lastName,
-            email: email,
-            password: password,
-            birthday: birthday,
-            telephone: telephone,
-            country: country,
+            ...createUserData,
+            user_type: 'admin',
             _created: new Date(),
         })
         .then(res => {
             setTimeout(() => {
-                dispatch(userLoginIn(email, password, history))
+                dispatch(userLoginIn(createUserData.email, createUserData.password, history))
+                dispatch(createUserSuccess());
+            }, 1000);
+        })
+        .catch(err=>{
+            dispatch(createUserFailed());
+            console.log(err)
+        });
+    }
+}
+
+export const subUserRegister = (createUserData) => {
+    return async (dispatch) => {
+        dispatch(createUserStarted());
+        axios.post('http://localhost:8081/api/v1/auth/register', {
+            ...createUserData,
+            user_type: 'user',
+            _created: new Date(),
+        })
+        .then(res => {
+            setTimeout(() => {
                 dispatch(createUserSuccess());
             }, 1000);
         })
