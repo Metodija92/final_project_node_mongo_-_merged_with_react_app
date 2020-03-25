@@ -165,8 +165,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        createNewProduct: (name, type, description, date, price) => {
-            dispatch(createNewProduct(name, type, description, date, price));
+        createNewProduct: (newProduct) => {
+            dispatch(createNewProduct(newProduct));
         },
         editExistingProduct: (id, name, type, description, date, price) => {
             dispatch(editExistingProduct(id, name, type, description, date, price));

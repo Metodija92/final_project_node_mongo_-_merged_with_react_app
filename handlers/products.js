@@ -1,9 +1,18 @@
 const mProducts = require('../models/products')
 
 const getAll = (req, res) => {
-    console.log(req.user);
-    console.log(req.user.id);
-    let q = {user_id: req.user.id};
+    let q = {}
+    if(req.query.user_type === 'admin') {
+        q = {$or: [{user_id: req.user.id}, {supervisor_id: req.user.id}]};
+    } else if (req.query.user_type === 'user') {
+        q = {user_id: req.user.id}
+    } else {
+        // Ako 'admin' saka da vidi podatoci samo od eden sub-user 
+        // ke treba kako 'user_type' query param
+        // da go prati id-to na sub-userot koj saka da go vidi
+        q = {user_id: req.query.user_type}
+    }
+
     let sort = {};
 
     if(req.query.date_from != undefined) {

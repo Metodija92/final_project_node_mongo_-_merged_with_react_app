@@ -118,8 +118,9 @@ export const subUserRegister = (createUserData) => {
 
 export const getProductsCall = () => {
     return async (dispatch) => {
+        let user_type = cookies.get('userInfo').user_type
         dispatch(getAllPostsStarted());
-        axios.get("http://localhost:8080/api/v1/products/?sort=purchaseDate:desc", 
+        axios.get(`http://localhost:8080/api/v1/products/?sort=purchaseDate:desc&user_type=${user_type}`, 
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -136,8 +137,9 @@ export const getProductsCall = () => {
 
 export const getProductsSorted = (sortQuery) => {
     return async (dispatch) => {
+        let user_type = cookies.get('userInfo').user_type
         dispatch(getAllPostsStarted());
-        axios.get(`http://localhost:8080/api/v1/products/?sort=${sortQuery}`,
+        axios.get(`http://localhost:8080/api/v1/products/?sort=${sortQuery}&user_type=${user_type}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -160,8 +162,9 @@ export const getProductsSorted = (sortQuery) => {
 
 export const getExpencesFiltered = (from, to) => {
     return async (dispatch) => {
+        let user_type = cookies.get('userInfo').user_type
         dispatch(getAllPostsStarted());
-        axios.get(`http://localhost:8080/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc`,
+        axios.get(`http://localhost:8080/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc&user_type=${user_type}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
