@@ -246,9 +246,12 @@ const confirm = (req, res) => {
     var hash = req.params.confirm_hash
     mUsers.confirmUserAccount(hash)
     .then(() => {
+        let p = req.path;
+        console.log(p);
         return res.status(200).send('You have confirmed you email!');
     })
     .catch((err) => {
+        console.log(err);
         return res.status(500).send('Internal server error');
     })
 }

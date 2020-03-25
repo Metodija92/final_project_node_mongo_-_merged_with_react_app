@@ -176,15 +176,11 @@ export const getExpencesFiltered = (from, to) => {
     }
 }
 
-export const createNewProduct = (name, type, description, date, price) => {
+export const createNewProduct = (newProduct) => {
     return async (dispatch) => {
         dispatch(createOrEditStarted());
         axios.post('http://localhost:8080/api/v1/products/', {
-            productName: name,
-            productType: type,
-            productDescription: description,
-            purchaseDate: date,
-            productPrice: price,
+            ...newProduct,
             _created: new Date()
         }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
