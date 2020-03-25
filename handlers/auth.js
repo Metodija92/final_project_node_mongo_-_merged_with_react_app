@@ -275,6 +275,17 @@ const updateInfo = (req, res) => {
     });
 }
 
+const findUsers = (req, res) => {
+    mUsers.getSubUsers(req.user.id)
+    .then((data) => {
+        return res.status(200).send(data);
+    })
+    .catch(err => {
+        console.log(err);
+        return res.status(500).send(v.errors);
+    });
+}
+
 
 module.exports = {
     register,
@@ -285,5 +296,6 @@ module.exports = {
     changePassword,
     userInfo,
     confirm,
-    updateInfo
+    updateInfo,
+    findUsers
 }

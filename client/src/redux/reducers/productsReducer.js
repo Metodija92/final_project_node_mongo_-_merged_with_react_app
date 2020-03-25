@@ -1,6 +1,7 @@
 const initialUserState = {
     products: [],
     productToEdit: [],
+    subUsers: [],
     showEditProduct: false,
     didUpdate: false,
     jwt: null,
@@ -39,6 +40,12 @@ export function productsReducer (state = initialUserState, action) {
                 ...state,
                 createUserStarted: false,
                 createUserFailed: false
+            }
+        }
+        case 'GET_SUB_USER' : {
+            return {
+                ...state,
+                subUsers: action.payload
             }
         }
         case 'GET_PRODUCTS' : {

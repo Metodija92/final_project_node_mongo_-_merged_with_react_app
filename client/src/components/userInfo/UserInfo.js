@@ -29,14 +29,16 @@ class UserInfo extends React.Component {
     constructor() {
         super()
         this.state = {
-            user_type: cookies.get('userInfo').user_type,
-            accountStatus: cookies.get('userInfo').status,
             first_name: cookies.get('userInfo').name,
             last_name: cookies.get('userInfo').lastName,
             email: cookies.get('userInfo').email,
+            accountStatus: cookies.get('userInfo').status,
             birthday: cookies.get('userInfo').birthday.slice(0, 10),
-            telephone: cookies.get('userInfo').telephone,
             country: cookies.get('userInfo').country,
+            telephone: cookies.get('userInfo').telephone,
+            user_type: cookies.get('userInfo').user_type,
+            user_id: cookies.get('userInfo').user_id,
+            supervisor_id: cookies.get('userInfo').supervisor_id,
             passwordChange: false,
             infoChanged: false,
             subUserRegisterModal: false,
@@ -89,7 +91,10 @@ class UserInfo extends React.Component {
                 'status': this.state.accountStatus,
                 'birthday': this.state.birthday,
                 'country': this.state.country,
-                'telephone': this.state.telephone
+                'telephone': this.state.telephone,
+                'user_type': this.state.user_type,
+                'user_id': this.state.user_id,
+                'supervisor_id': this.state.supervisor_id
             });
         })
         .catch(err => {

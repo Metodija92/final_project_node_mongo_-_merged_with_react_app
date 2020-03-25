@@ -112,6 +112,17 @@ const updateUserInfo = (data) => {
         })
     })
 }
+
+const getSubUsers = (id) => {
+    return new Promise((success, fail) => {
+        User.find({supervisor_id: id}, {_id: 1, first_name: 1}, (err, data) => {
+            if(err){
+                return fail(err);
+            }
+            return success(data);
+        })
+    })
+}
  
 
 module.exports = {
@@ -122,5 +133,6 @@ module.exports = {
     resetPassword,
     getEmailAfterReset,
     changePassword,
-    updateUserInfo
+    updateUserInfo,
+    getSubUsers
 }

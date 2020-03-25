@@ -5,6 +5,9 @@ import { connect } from 'react-redux'
 import { getProductsCall, getExpencesFiltered } from '../../redux/actions/productAction'
 import '../../assets/css/Expences.css'
 
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 
 class Expences extends React.Component {
     constructor() {
@@ -14,7 +17,8 @@ class Expences extends React.Component {
             showYearly: true,
             toggle: true,
             filterValue: null,
-            didUpdate: false
+            didUpdate: false,
+            user_type: cookies.get('userInfo').user_type
         }
     }
 
@@ -57,11 +61,11 @@ class Expences extends React.Component {
             else if (myDate.length === 4) { // Filter by year
                 let fromTargetDate = new Date(`${myDate}-01-01 00:00:00.000`).getTime();
                 let toTargetDate = new Date(`${myDate}-12-31 23:59:59.000`).getTime();
-                this.props.getExpencesFiltered(fromTargetDate, toTargetDate);
+                this.props.getExpencesFiltered(fromTargetDate, toTargetDate, this.state.user_type);
             } else if (myDate.length === 7) { // Filter by month
                 let fromTargetDate = new Date(`${myDate}-01 00:00:00.000`).getTime();
                 let toTargetDate = new Date(`${myDate}-31 23:59:59.000`).getTime();
-                this.props.getExpencesFiltered(fromTargetDate, toTargetDate);
+                this.props.getExpencesFiltered(fromTargetDate, toTargetDate, this.state.user_type);
             }
             this.setState({ didUpdate: false })
         }
@@ -100,14 +104,14 @@ class Expences extends React.Component {
                         </button>
 
                         {this.state.showMonhtly ?
-                            <p id="select-box-container">
+                            <p className="select-box-container">
                                 <label htmlFor="expenses-filter">Choose Month </label>
                                 <input type='month' className="select-box" id="expenses-month-box" onChange={this.searchFilter}></input>
                             </p>
                             : null}
 
                         {this.state.showYearly ?
-                            <p id="select-box-container">
+                            <p className="select-box-container">
                                 <label htmlFor="expenses-filter">Choose Year </label>
                                 <select name="expenses-filter" className="select-box" id="expenses-select-box" onChange={this.searchFilter}>
                                     <option>----</option>
@@ -140,8 +144,8 @@ function mapDispatchToProps(dispatch) {
         getProductsCall: () => {
             dispatch(getProductsCall());
         },
-        getExpencesFiltered: (fromTargetDate, toTargetDate) => {
-            dispatch(getExpencesFiltered(fromTargetDate, toTargetDate));
+        getExpencesFiltered: (fromTargetDate, toTargetDate, user_type) => {
+            dispatch(getExpencesFiltered(fromTargetDate, toTargetDate, user_type));
         }
     };
 }

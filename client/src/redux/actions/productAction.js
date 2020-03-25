@@ -116,6 +116,22 @@ export const subUserRegister = (createUserData) => {
     }
 }
 
+export const getSubUser = () => {
+    return async (dispatch) => {
+        axios.get('http://localhost:8081/api/v1/auth/find-users', 
+        { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
+        .then(res => {
+            dispatch({
+                type: 'GET_SUB_USER',
+                payload: res.data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        });
+    }
+}
+
 export const getProductsCall = () => {
     return async (dispatch) => {
         let user_type = cookies.get('userInfo').user_type
@@ -135,9 +151,9 @@ export const getProductsCall = () => {
     }
 }
 
-export const getProductsSorted = (sortQuery) => {
+export const getProductsSorted = (sortQuery, user_type) => {
     return async (dispatch) => {
-        let user_type = cookies.get('userInfo').user_type
+        // let user_type = cookies.get('userInfo').user_type
         dispatch(getAllPostsStarted());
         axios.get(`http://localhost:8080/api/v1/products/?sort=${sortQuery}&user_type=${user_type}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
@@ -160,9 +176,9 @@ export const getProductsSorted = (sortQuery) => {
 
 // axios.get(`http://localhost:8080/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc&subUser_id=${subUser_id}`
 
-export const getExpencesFiltered = (from, to) => {
+export const getExpencesFiltered = (from, to, user_type) => {
     return async (dispatch) => {
-        let user_type = cookies.get('userInfo').user_type
+        // let user_type = cookies.get('userInfo').user_type
         dispatch(getAllPostsStarted());
         axios.get(`http://localhost:8080/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc&user_type=${user_type}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
