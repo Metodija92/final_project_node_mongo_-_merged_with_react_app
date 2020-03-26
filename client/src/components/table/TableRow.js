@@ -5,12 +5,15 @@ import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { editThisProduct, changeNewToEditProduct } from '../../redux/actions/productAction'
 
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 
 class TableRow extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            user_type: cookies.get('userInfo').user_type
         }
     }
 
@@ -38,15 +41,19 @@ class TableRow extends React.Component {
                 <td>{this.props.productDescription}</td>
                 <td>{this.props.purchaseDate}</td>
                 <td>{this.props.productPrice}</td>
+                
                 {this.props.showProducts ? <td>
+
                     <Link to='/editproduct'>
                         <button className="edit-del-btn far fa-edit"
                             onClick={this.sendEditItemToStore}>
                         </button>
                     </Link>
+                    {this.state.user_type === 'admin' ?
                     <button className="edit-del-btn far fa-trash-alt"
                         onClick={this.sendDeleteIdToStore}>
                     </button>
+                    : null}
                 </td> : null}
             </tr>
         )

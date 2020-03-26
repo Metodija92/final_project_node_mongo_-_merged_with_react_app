@@ -2,7 +2,9 @@ import React from 'react'
 import Table from '../table/Table'
 import { connect } from 'react-redux'
 
-import { getProductsCall, getExpencesFiltered } from '../../redux/actions/productAction'
+import SelectUserOptions from '../SelectUserOptions/SelectUserOptions'
+
+import { getProductsCall, getExpencesFiltered, getSubUser, getProductsSorted } from '../../redux/actions/productAction'
 import '../../assets/css/Expences.css'
 
 import Cookies from 'universal-cookie';
@@ -16,9 +18,10 @@ class Expences extends React.Component {
             showMonhtly: false,
             showYearly: true,
             toggle: true,
-            filterValue: null,
+            filterValue: 'total',
             didUpdate: false,
-            user_type: cookies.get('userInfo').user_type
+            user_type: cookies.get('userInfo').user_type,
+            user_sort: cookies.get('userInfo').user_type
         }
     }
 
@@ -48,24 +51,35 @@ class Expences extends React.Component {
         })
     }
 
+    // When admin is logged in enables to sort/filter by sub-user
+    getUserForSort = (event) => {
+        this.setState({
+            user_sort: event.target.value,
+            didUpdate: true
+        })
+    }
+
     componentDidMount() {
-        this.props.getProductsCall();
+        if(this.state.user_type === 'admin') {
+            this.props.getSubUser();
+        }
+        this.props.getProductsCall(this.state.user_type);
     }
 
     componentDidUpdate() {
         if (this.state.didUpdate) {
             let myDate = this.state.filterValue
             if (myDate === 'total') {
-                this.props.getProductsCall();
+                this.props.getProductsCall(this.state.user_sort);
             }
             else if (myDate.length === 4) { // Filter by year
                 let fromTargetDate = new Date(`${myDate}-01-01 00:00:00.000`).getTime();
                 let toTargetDate = new Date(`${myDate}-12-31 23:59:59.000`).getTime();
-                this.props.getExpencesFiltered(fromTargetDate, toTargetDate, this.state.user_type);
+                this.props.getExpencesFiltered(fromTargetDate, toTargetDate, this.state.user_sort);
             } else if (myDate.length === 7) { // Filter by month
                 let fromTargetDate = new Date(`${myDate}-01 00:00:00.000`).getTime();
                 let toTargetDate = new Date(`${myDate}-31 23:59:59.000`).getTime();
-                this.props.getExpencesFiltered(fromTargetDate, toTargetDate, this.state.user_type);
+                this.props.getExpencesFiltered(fromTargetDate, toTargetDate, this.state.user_sort);
             }
             this.setState({ didUpdate: false })
         }
@@ -103,23 +117,37 @@ class Expences extends React.Component {
                             onClick={this.showMonhtly}>MONTHLY
                         </button>
 
-                        {this.state.showMonhtly ?
+                        {/* {this.state.showMonhtly ?
                             <p className="select-box-container">
                                 <label htmlFor="expenses-filter">Choose Month </label>
                                 <input type='month' className="select-box" id="expenses-month-box" onChange={this.searchFilter}></input>
                             </p>
-                            : null}
+                            : null} */}
 
-                        {this.state.showYearly ?
-                            <p className="select-box-container">
+                        <p className="select-box-container">
+                            {this.state.user_type === 'admin' && this.props.subUsers ? 
+                                this.props.subUsers.length > 0 ?
+                                    <SelectUserOptions 
+                                        subUsers={this.props.subUsers}
+                                        getUserForSort={this.getUserForSort}
+                                    /> 
+                                : null
+                            : null}
+                            {this.state.showYearly ?
+                                <React.Fragment>
                                 <label htmlFor="expenses-filter">Choose Year </label>
                                 <select name="expenses-filter" className="select-box" id="expenses-select-box" onChange={this.searchFilter}>
                                     <option>----</option>
                                     <option value={'total'}>Total</option>
                                     {selectOptions}
-                                </select>
-                            </p>
-                            : null}
+                                </select> 
+                                </React.Fragment> :
+                                <React.Fragment>
+                                <label htmlFor="expenses-filter">Choose Month </label>
+                                <input type='month' className="select-box" id="expenses-month-box" onChange={this.searchFilter}></input>
+                                </React.Fragment>
+                            }
+                        </p> 
 
                     </div>
                     <Table />
@@ -135,17 +163,24 @@ class Expences extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        products: state.productsReducer.products
+        products: state.productsReducer.products,
+        subUsers: state.productsReducer.subUsers
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        getProductsCall: () => {
-            dispatch(getProductsCall());
+        getProductsCall: (user_type) => {
+            dispatch(getProductsCall(user_type));
         },
         getExpencesFiltered: (fromTargetDate, toTargetDate, user_type) => {
             dispatch(getExpencesFiltered(fromTargetDate, toTargetDate, user_type));
+        },
+        getProductsSorted: (sortQuery, user_type) => {
+            dispatch(getProductsSorted(sortQuery, user_type));
+        },
+        getSubUser: () => {
+            dispatch(getSubUser())
         }
     };
 }

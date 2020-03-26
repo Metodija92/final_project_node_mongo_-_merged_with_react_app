@@ -46,21 +46,19 @@ class Products extends React.Component {
         })
     }
 
+    // When admin is logged in enables to sort/filter by sub-user
     getUserForSort = (event) => {
         this.setState({
             user_sort: event.target.value,
             didUpdate: true
         })
-        setTimeout(() => {
-            console.log(this.state.user_sort)
-        }, 1000)
     }
 
     componentDidMount() {
         if(this.state.user_type === 'admin') {
             this.props.getSubUser();
         }
-        this.props.getProductsCall();
+        this.props.getProductsCall(this.state.user_type);
         // Give time to Mongo to write data before going in update(Mongo returns OK while data in Quee to be written)
         setTimeout(() => {
             this.setState({ didUpdate: this.props.didUpdate })
@@ -92,11 +90,13 @@ class Products extends React.Component {
                         <h1>Products</h1>
                         <p className="select-box-container">
                             {this.state.user_type === 'admin' && this.props.subUsers ? 
-                                <SelectUserOptions 
-                                    subUsers={this.props.subUsers}
-                                    getUserForSort={this.getUserForSort}
-                                /> : 
-                            null}
+                                this.props.subUsers.length > 0 ?
+                                    <SelectUserOptions 
+                                        subUsers={this.props.subUsers}
+                                        getUserForSort={this.getUserForSort}
+                                    /> 
+                                : null
+                            : null}
                             <label htmlFor="purchase-filter">Sort by:</label>
                             <select name="purchase-filter" className="select-box" onChange={this.sortProduct}>
                                 <option value="purchaseDate:desc">Latest Purchase</option>
@@ -125,8 +125,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        getProductsCall: () => {
-            dispatch(getProductsCall());
+        getProductsCall: (user_type) => {
+            dispatch(getProductsCall(user_type));
         },
         changeNewToEditProduct: (boolean) => {
             dispatch(changeNewToEditProduct(boolean));
