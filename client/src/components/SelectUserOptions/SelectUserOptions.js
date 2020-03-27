@@ -6,7 +6,6 @@ const cookies = new Cookies();
 const SelectUserOptions = (props) => {
 
     const {subUsers} = props
-    // const adminName = cookies.get('userInfo').name;
     const adminId = cookies.get('userInfo').user_id;
 
     const selectOptions = () => {

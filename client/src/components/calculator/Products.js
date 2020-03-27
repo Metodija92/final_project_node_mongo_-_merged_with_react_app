@@ -46,7 +46,7 @@ class Products extends React.Component {
         })
     }
 
-    // When admin is logged in enables to sort/filter by sub-user
+    // Check is admin user has sub-users and enables sort/filter by sub-user account
     getUserForSort = (event) => {
         this.setState({
             user_sort: event.target.value,
@@ -65,7 +65,7 @@ class Products extends React.Component {
         }, 500)
     }
 
-    // ***Triggers after deleting, editing, sorting or creating new product***
+    // Triggers after deleting, editing, sorting or creating new product
     componentDidUpdate() {
         if (this.state.didUpdate === true) {
             this.props.getProductsSorted(this.state.sort, this.state.user_sort);
@@ -91,10 +91,7 @@ class Products extends React.Component {
                         <p className="select-box-container">
                             {this.state.user_type === 'admin' && this.props.subUsers ? 
                                 this.props.subUsers.length > 0 ?
-                                    <SelectUserOptions 
-                                        subUsers={this.props.subUsers}
-                                        getUserForSort={this.getUserForSort}
-                                    /> 
+                                    <SelectUserOptions subUsers={this.props.subUsers} getUserForSort={this.getUserForSort} /> 
                                 : null
                             : null}
                             <label htmlFor="purchase-filter">Sort by:</label>

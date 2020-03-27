@@ -27,6 +27,14 @@
     cursor: pointer;
 }
 
+#wrong-user-info {
+    margin: 0;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    color: #ef0815;
+}
+
 /* Testing for the modal */
 
 .modal-size {

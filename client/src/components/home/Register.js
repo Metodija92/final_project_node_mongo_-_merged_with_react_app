@@ -29,12 +29,13 @@ class Register extends React.Component {
         this.setState({ [event.target.id]: event.target.value })
     }
 
-    // When rendered in user info for sub-user register, closes the modal on Cancel btn click
+    // When rendered in user info for creating a sub-user, closes the modal on Cancel btn click
     closeUserInfoModal = (event) => {
         event.preventDefault()
         this.props.closeRegisterModal()
     }
 
+    // Register new user call (with minor field validaiton)
     registerUser = (event) => {
         if (this.state.first_name === null ||
             this.state.last_name === null ||
@@ -110,7 +111,7 @@ class Register extends React.Component {
                         </form>
                         {this.props.createUserStarted ?
                             <ReactLoading type={'spin'} color={'#0abf34'} height={'10%'} width={'10%'} className={'spinner'} />
-                            : null}
+                        : null}
                     </div>
 
                     {!this.state.loggedIn ? <div className="aditional-info">

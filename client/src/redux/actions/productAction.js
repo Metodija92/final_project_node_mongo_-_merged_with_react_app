@@ -31,13 +31,10 @@ export function changeNewToEditProduct (newState) {
     }
 }
 
-export function editThisProduct 
-(id, productName, productType, productDescription, purchaseDate, productPrice) {
+export function editThisProduct (edit_this_product) {
     return {
         type: 'EDIT_THIS_PRODUCT',
-        payload: {
-            id, productName, productType, productDescription, purchaseDate, productPrice
-        }
+        payload: edit_this_product
     }
 }
 
@@ -45,12 +42,14 @@ export function editThisProduct
 // Thunk actions test
 
 export const userLoginIn = (email, password, history) => {
-    return async () => {
+    return async (dispatch) => {
+        dispatch(userLoginStarted());
         axios.post('http://localhost:8081/api/v1/auth/login', {
             email,
             password
         })
         .then(res=>{
+            dispatch(userLoginSuccess());
             cookies.set('userInfo', {
                 'name': res.data.first_name,
                 'lastName': res.data.last_name,
@@ -67,9 +66,9 @@ export const userLoginIn = (email, password, history) => {
         })
         .then(() => {
             history.push("/products")
-            console.log(cookies.get('userInfo'))
         })
         .catch(err=>{
+            dispatch(userLoginFailed());
             console.log(err)
         });
     }
@@ -91,7 +90,7 @@ export const userRegister = (createUserData, history) => {
         })
         .catch(err=>{
             dispatch(createUserFailed());
-            console.log(err)
+            console.log(err.response)
         });
     }
 }
@@ -134,7 +133,7 @@ export const getSubUser = () => {
 
 export const getProductsCall = (user_type) => {
     return async (dispatch) => {
-        dispatch(getAllPostsStarted());
+        dispatch(getAllProductsStarted());
         axios.get(`http://localhost:8080/api/v1/products/?sort=purchaseDate:desc&user_type=${user_type}`, 
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
@@ -144,7 +143,7 @@ export const getProductsCall = (user_type) => {
             });
         })
         .catch(err=>{
-            dispatch(getAllPostsFailed());
+            dispatch(getAllProductsFailed());
             console.log(err);
         })
     }
@@ -152,7 +151,7 @@ export const getProductsCall = (user_type) => {
 
 export const getProductsSorted = (sortQuery, user_type) => {
     return async (dispatch) => {
-        dispatch(getAllPostsStarted());
+        dispatch(getAllProductsStarted());
         axios.get(`http://localhost:8080/api/v1/products/?sort=${sortQuery}&user_type=${user_type}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
@@ -166,7 +165,7 @@ export const getProductsSorted = (sortQuery, user_type) => {
             });
         })
         .catch(err=>{
-            dispatch(getAllPostsFailed());
+            dispatch(getAllProductsFailed());
             console.log(err)
         });
     }
@@ -175,7 +174,7 @@ export const getProductsSorted = (sortQuery, user_type) => {
 
 export const getExpencesFiltered = (from, to, user_type) => {
     return async (dispatch) => {
-        dispatch(getAllPostsStarted());
+        dispatch(getAllProductsStarted());
         axios.get(`http://localhost:8080/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc&user_type=${user_type}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
@@ -185,7 +184,7 @@ export const getExpencesFiltered = (from, to, user_type) => {
             });
         })
         .catch(err=>{
-            dispatch(getAllPostsFailed());
+            dispatch(getAllProductsFailed());
             console.log(err)
         })
     }
@@ -213,15 +212,11 @@ export const createNewProduct = (newProduct) => {
     }
 }
 
-export const editExistingProduct = (id, name, type, description, date, price) => {
+export const editExistingProduct = (id, edit_product) => {
     return async (dispatch) => {
         dispatch(createOrEditStarted());
         axios.put(`http://localhost:8080/api/v1/products/${id}`, {
-            productName: name,
-            productType: type,
-            productDescription: description,
-            purchaseDate: date,
-            productPrice: price,
+            ...edit_product,
             _modified: new Date()
         }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
@@ -257,6 +252,24 @@ export const deleteProduct = (id) => {
     }
 }
 
+const userLoginStarted = () => {
+    return {
+        type: 'USER_LOGIN_STARTED'
+    }
+}
+
+const userLoginFailed = () => {
+    return {
+        type: 'USER_LOGIN_FAILED'
+    }
+}
+
+const userLoginSuccess = () => {
+    return {
+        type: 'USER_LOGIN_SUCCESS'
+    }
+}
+
 const createUserStarted = () => {
     return {
         type: 'CREATE_USER_STARTED'
@@ -275,15 +288,15 @@ const createUserSuccess = () => {
     }
 }
 
-const getAllPostsStarted = () => {
+const getAllProductsStarted = () => {
     return {
-        type: 'GET_ALL_POSTS_STARTED'
+        type: 'GET_ALL_PRODUCTS_STARTED'
     }
 }
 
-const getAllPostsFailed = () => {
+const getAllProductsFailed = () => {
     return {
-        type: 'GET_ALL_POSTS_FAILED'
+        type: 'GET_ALL_PRODUCTS_FAILED'
     }
 }
 

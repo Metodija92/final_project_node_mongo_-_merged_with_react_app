@@ -24,6 +24,7 @@ const ChangePassword = (props) => {
     const [pass1, setPass1] = useState('')
     const [pass2, setPass2] = useState('')
 
+    // Close open modal
     const closeModals = () => {
         setModal(false);
         props.closeModal();

@@ -64,14 +64,13 @@ const register = (req, res) => {
     })
     .catch(err => {
         console.log(err);
-        return res.status(500).send(v.errors);
+        return res.status(500).send(err);
     });
 }
 
 const login = (req, res) => {
     mUsers.getUserPasswordByEmail(req.body.email)
     .then((data) => {
-        console.log(`Vrakja: ${data}`)
         bcrypt.compare(req.body.password, data.password, (err, result) => {
             if(err){
                 return res.status(500).send('Could not compare passwords');

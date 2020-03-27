@@ -21,6 +21,7 @@ class Navbar extends React.Component {
         }
     }
 
+    // Changes className of btn to get active color
     setProductsActive = () => {
         this.setState({
             productsClass: true,
@@ -28,6 +29,8 @@ class Navbar extends React.Component {
         })
         this.props.changeNewToEditProduct(false);
     }
+
+    // Changes className of btn to get active color
     setExpencesActive = () => {
         this.setState({
             productsClass: false,
@@ -36,16 +39,9 @@ class Navbar extends React.Component {
         this.props.changeNewToEditProduct(false);
     }
 
+    // Show log out modal
     showLogOut = () => {
         this.setState({ showLogOut: !this.state.showLogOut })
-    }
-
-    handleOpen = () => {
-        this.setState({ isOpen: true })
-      }
-    
-    handleClose = () => {
-        this.setState({ isOpen: false })
     }
 
     render() {

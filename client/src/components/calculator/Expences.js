@@ -15,7 +15,6 @@ class Expences extends React.Component {
     constructor() {
         super()
         this.state = {
-            showMonhtly: false,
             showYearly: true,
             toggle: true,
             filterValue: 'total',
@@ -29,7 +28,6 @@ class Expences extends React.Component {
     showYearly = () => {
         this.setState({
             showYearly: true,
-            showMonhtly: false,
             toggle: true
         })
     }
@@ -38,7 +36,6 @@ class Expences extends React.Component {
     showMonhtly = () => {
         this.setState({
             showYearly: false,
-            showMonhtly: true,
             toggle: false
         })
     }
@@ -66,6 +63,7 @@ class Expences extends React.Component {
         this.props.getProductsCall(this.state.user_type);
     }
 
+    // Triggers after selecting filter option
     componentDidUpdate() {
         if (this.state.didUpdate) {
             let myDate = this.state.filterValue
@@ -116,13 +114,6 @@ class Expences extends React.Component {
                         <button className={!this.state.toggle ? "tab-btn active-tab-btn " : "tab-btn"}
                             onClick={this.showMonhtly}>MONTHLY
                         </button>
-
-                        {/* {this.state.showMonhtly ?
-                            <p className="select-box-container">
-                                <label htmlFor="expenses-filter">Choose Month </label>
-                                <input type='month' className="select-box" id="expenses-month-box" onChange={this.searchFilter}></input>
-                            </p>
-                            : null} */}
 
                         <p className="select-box-container">
                             {this.state.user_type === 'admin' && this.props.subUsers ? 

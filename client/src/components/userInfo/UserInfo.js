@@ -48,26 +48,32 @@ class UserInfo extends React.Component {
         }
     }
 
+    // Save fields value to state
     saveInputValue = (event) => {
         this.setState({ [event.target.id]: event.target.value })
     }
 
+    // Open change password modal
     openChangePasswordModal = () => {
         this.setState({passwordChange: !this.state.passwordChange});
     }
 
+    // Open register user modal
     subUserRegister = () => {
         this.setState({subUserRegisterModal: !this.state.subUserRegisterModal})
     }
 
+    // Open pop over on btns when user has not confirmed his account (email)
     openTopPopOver = () => {
         this.setState({topPopOverOpen: !this.state.topPopOverOpen})
     }
 
+    // Open pop over on btns when user has not confirmed his account (email)
     openMidPopOver = () => {
         this.setState({midPopOverOpen: !this.state.midPopOverOpen})
     }
 
+    // Open pop over on btns when user has not confirmed his account (email)
     openBotPopOver = () => {
         this.setState({botPopOverOpen: !this.state.botPopOverOpen})
     }
@@ -137,7 +143,6 @@ class UserInfo extends React.Component {
                             <label className="text-field-label" >Account Status</label>
                             <input type='text' className='text-field-input' defaultValue={this.state.accountStatus ? 'Account confirmed' : 'Account not confirmed'} readOnly={true}/>
                         </p>
-                        {/* <input type='text' defaultValue='what to put....?'/> */}
                         <Popover
                             isOpen={this.state.topPopOverOpen}
                             onClickOutside={() => this.setState({ topPopOverOpen: false })}
@@ -182,9 +187,6 @@ class UserInfo extends React.Component {
                             <button className='user-info-btn' onClick={this.state.accountStatus ? this.subUserRegister : this.openBotPopOver} >Create Sub User Account</button>
                             </Popover> : 
                         null}
-                        {/* Treba da najdam nacin kako samo so btn disabled da gi napravam ... */}
-                        {/* <button className='user-info-btn' onClick={this.updateUserInfo} disabled={this.state.accountStatus !=='true' ? true : false}>Save Changes</button> */}
-                        {/* <button className='user-info-btn' onClick={this.openChangePasswordModal} disabled={this.state.accountStatus !=='true' ? true : false}>Change password</button> */}
                     </div>
                     <Modal isOpen={this.state.passwordChange} style={customStyles}>
                         <ChangePassword closeModal={this.openChangePasswordModal}/>

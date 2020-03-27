@@ -66,13 +66,14 @@ class NewProduct extends React.Component {
             alert('All fields must be filled out')
             event.preventDefault()
         } else { // Edit product axios call
-            this.props.editExistingProduct(
-                this.props.productToEdit.id,
-                this.state.productName,
-                this.state.productType,
-                this.state.productDescription,
-                this.state.purchaseDate,
-                this.state.productPrice);
+            let edit_product = {
+                productName: this.state.productName,
+                productType: this.state.productType,
+                productDescription: this.state.productDescription,
+                purchaseDate: this.state.purchaseDate,
+                productPrice: this.state.productPrice
+            }
+            this.props.editExistingProduct(this.props.productToEdit.id, edit_product);
         }
     }
 
@@ -168,8 +169,8 @@ function mapDispatchToProps(dispatch) {
         createNewProduct: (newProduct) => {
             dispatch(createNewProduct(newProduct));
         },
-        editExistingProduct: (id, name, type, description, date, price) => {
-            dispatch(editExistingProduct(id, name, type, description, date, price));
+        editExistingProduct: (id, edit_product) => {
+            dispatch(editExistingProduct(id, edit_product));
         }
     };
 }
