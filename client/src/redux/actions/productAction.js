@@ -69,7 +69,7 @@ export const userLoginIn = (email, password, history) => {
         })
         .catch(err=>{
             dispatch(userLoginFailed());
-            console.log(err)
+            console.log(err.response.data);
         });
     }
 }
@@ -90,7 +90,7 @@ export const userRegister = (createUserData, history) => {
         })
         .catch(err=>{
             dispatch(createUserFailed());
-            console.log(err.response)
+            console.log(err.response.data)
         });
     }
 }

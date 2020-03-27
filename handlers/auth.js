@@ -53,7 +53,8 @@ const register = (req, res) => {
                 }
             })
             .catch(err => {
-                throw new Error(err);
+                console.log('vleguva?')
+                throw new Error(err.message);
             });
         } else {
             throw new Error('Validation failed');
@@ -63,8 +64,8 @@ const register = (req, res) => {
         return res.status(201).send('ok');
     })
     .catch(err => {
-        console.log(err);
-        return res.status(500).send(err);
+        console.log(err.message);
+        return res.status(400).send(err.message);
     });
 }
 
@@ -96,7 +97,7 @@ const login = (req, res) => {
                     supervisor_id: data.supervisor_id
                 });
             }
-            return res.status(400).send('not found');
+            return res.status(400).send('Wrong password');
         });
     })
     .catch(err => {
