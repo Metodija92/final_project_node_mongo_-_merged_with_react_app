@@ -89,8 +89,12 @@ export const userRegister = (createUserData, history) => {
             }, 1000);
         })
         .catch(err=>{
-            dispatch(createUserFailed());
-            console.log(err.response.data)
+            dispatch(createUserFailed())
+            dispatch({
+                type: 'GET_ERROR_MESSAGE',
+                payload: err.response.data
+            })
+            // console.log(err.response.data)
         });
     }
 }
@@ -109,8 +113,12 @@ export const subUserRegister = (createUserData) => {
             }, 1000);
         })
         .catch(err=>{
-            dispatch(createUserFailed());
-            console.log(err)
+            dispatch(createUserFailed())
+            dispatch({
+                type: 'GET_ERROR_MESSAGE',
+                payload: err.response.data
+            })
+            // console.log(err.response.data)
         });
     }
 }

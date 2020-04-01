@@ -53,7 +53,6 @@ const register = (req, res) => {
                 }
             })
             .catch(err => {
-                console.log('vleguva?')
                 throw new Error(err.message);
             });
         } else {
@@ -64,7 +63,7 @@ const register = (req, res) => {
         return res.status(201).send('ok');
     })
     .catch(err => {
-        console.log(err.message);
+        // console.log(err.message);
         return res.status(400).send(err.message);
     });
 }

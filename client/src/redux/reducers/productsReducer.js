@@ -12,7 +12,8 @@ const initialUserState = {
     createUserStarted: false,
     createUserFailed: false,
     userLoginStarted: false,
-    userLoginFailed: false
+    userLoginFailed: false,
+    errorMessage: ''
 }
 
 export function productsReducer (state = initialUserState, action) {
@@ -21,6 +22,12 @@ export function productsReducer (state = initialUserState, action) {
             return {
                 ...state,
                 jwt: action.payload
+            }
+        }
+        case 'GET_ERROR_MESSAGE' : {
+            return {
+                ...state,
+                errorMessage: action.payload
             }
         }
         case 'USER_LOGIN_STARTED' : {

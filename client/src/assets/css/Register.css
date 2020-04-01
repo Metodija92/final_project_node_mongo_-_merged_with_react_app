@@ -14,3 +14,9 @@
 .spinner {
     align-self: center;
 }
+
+#error-message-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
