@@ -44,7 +44,7 @@ export function editThisProduct (edit_this_product) {
 export const userLoginIn = (email, password, history) => {
     return async (dispatch) => {
         dispatch(userLoginStarted());
-        axios.post('http://localhost:8081/api/v1/auth/login', {
+        axios.post('/api/v1/auth/login', {
             email,
             password
         })
@@ -77,7 +77,7 @@ export const userLoginIn = (email, password, history) => {
 export const userRegister = (createUserData, history) => {
     return async (dispatch) => {
         dispatch(createUserStarted());
-        axios.post('http://localhost:8081/api/v1/auth/register', {
+        axios.post('/api/v1/auth/register', {
             ...createUserData,
             user_type: 'admin',
             _created: new Date(),
@@ -102,7 +102,7 @@ export const userRegister = (createUserData, history) => {
 export const subUserRegister = (createUserData) => {
     return async (dispatch) => {
         dispatch(createUserStarted());
-        axios.post('http://localhost:8081/api/v1/auth/register', {
+        axios.post('/api/v1/auth/register', {
             ...createUserData,
             user_type: 'user',
             _created: new Date(),
@@ -125,7 +125,7 @@ export const subUserRegister = (createUserData) => {
 
 export const getSubUser = () => {
     return async (dispatch) => {
-        axios.get('http://localhost:8081/api/v1/auth/find-users', 
+        axios.get('/api/v1/auth/find-users', 
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
             dispatch({
@@ -142,7 +142,7 @@ export const getSubUser = () => {
 export const getProductsCall = (user_type) => {
     return async (dispatch) => {
         dispatch(getAllProductsStarted());
-        axios.get(`http://localhost:8080/api/v1/products/?sort=purchaseDate:desc&user_type=${user_type}`, 
+        axios.get(`/api/v1/products/?sort=purchaseDate:desc&user_type=${user_type}`, 
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -160,7 +160,7 @@ export const getProductsCall = (user_type) => {
 export const getProductsSorted = (sortQuery, user_type) => {
     return async (dispatch) => {
         dispatch(getAllProductsStarted());
-        axios.get(`http://localhost:8080/api/v1/products/?sort=${sortQuery}&user_type=${user_type}`,
+        axios.get(`/api/v1/products/?sort=${sortQuery}&user_type=${user_type}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -183,7 +183,7 @@ export const getProductsSorted = (sortQuery, user_type) => {
 export const getExpencesFiltered = (from, to, user_type) => {
     return async (dispatch) => {
         dispatch(getAllProductsStarted());
-        axios.get(`http://localhost:8080/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc&user_type=${user_type}`,
+        axios.get(`/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc&user_type=${user_type}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -201,7 +201,7 @@ export const getExpencesFiltered = (from, to, user_type) => {
 export const createNewProduct = (newProduct) => {
     return async (dispatch) => {
         dispatch(createOrEditStarted());
-        axios.post('http://localhost:8080/api/v1/products/', {
+        axios.post('/api/v1/products/', {
             ...newProduct,
             _created: new Date()
         }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
@@ -223,7 +223,7 @@ export const createNewProduct = (newProduct) => {
 export const editExistingProduct = (id, edit_product) => {
     return async (dispatch) => {
         dispatch(createOrEditStarted());
-        axios.put(`http://localhost:8080/api/v1/products/${id}`, {
+        axios.put(`/api/v1/products/${id}`, {
             ...edit_product,
             _modified: new Date()
         }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
@@ -249,7 +249,7 @@ export const editExistingProduct = (id, edit_product) => {
 
 export const deleteProduct = (id) => {
     return async () => {
-        axios.delete(`http://localhost:8080/api/v1/products/${id}`,
+        axios.delete(`/api/v1/products/${id}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
             // console.log(res);
