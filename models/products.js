@@ -9,6 +9,7 @@ const Product = mongoose.model(
             purchaseDate: Date,
             productPrice: Number,
             user_id: String,
+            supervisor_id: String,
             _created : Date, 
             _modified : Date
         }

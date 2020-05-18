@@ -18,10 +18,16 @@ class Home extends React.Component {
     render() {
         return (
             <React.Fragment>
-                {!this.state.showRegister ? <Login registerAccount={this.registerAccount}
-                saveInputValue={this.saveInputValue} history={this.props.history} /> : null}
-                {this.state.showRegister ? <Register registerAccount={this.registerAccount}
-                saveInputValue={this.saveInputValue} history={this.props.history} /> : null}
+                {!this.state.showRegister ? 
+                    <Login registerAccount={this.registerAccount}
+                    history={this.props.history} /> 
+                    : null
+                }
+                {this.state.showRegister ? 
+                    <Register registerAccount={this.registerAccount}
+                    history={this.props.history} loggedIn={false}/> 
+                    : null
+                }
             </React.Fragment>
         )
     }

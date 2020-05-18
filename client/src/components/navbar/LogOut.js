@@ -8,9 +8,8 @@ const LogOut = (props) => {
     function logOut() {
         props.showLogOut()
         localStorage.clear();   
-        cookies.remove('jwt')
-        cookies.remove('name')
-        cookies.remove('lastName')
+        cookies.remove('jwt');
+        cookies.remove('userInfo');
     }
 
     return (

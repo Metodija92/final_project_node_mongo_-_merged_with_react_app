@@ -118,6 +118,10 @@ html, body {
     outline: 0;
 }
 
+.navbar-link{
+    cursor: default;
+}
+
 /* .navbar-button:active {
     color: #1DD1A1;
     border-color: #1DD1A1;
@@ -147,6 +151,42 @@ html, body {
     margin: auto 0 auto 15px;
 }
 
+#log-out-btn {
+    margin: auto 0 auto 15px;
+    cursor: pointer;
+}
+
+/* #dropdown-menu {
+    position: absolute;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    z-index: 100;
+    height: 100px;
+    width: 180px;
+    margin-right: 15px;
+    margin-top: 40px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid #C6C6C6;
+    border-radius: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+#dropdown-menu button {
+    cursor: pointer;
+}
+
+.user-info-btn {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    background:  #1DD1A1 ;
+    height: 30px;
+    border-radius:  5px;
+} */
 
     /* SELECT BOX */
 .select-box {
@@ -157,6 +197,7 @@ html, body {
     border-color: #C6C6C6;
     border-radius: 5px;
     margin-left: 15px;
+    margin-right: 15px;
     outline: 0;
 }
 

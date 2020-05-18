@@ -14,12 +14,14 @@ const cookies = new Cookies();
 class Navbar extends React.Component {
     constructor(props) {
         super(props),
-            this.state = {
-                toggle: this.props.toggle,
-                showLogOut: false
-            }
+        this.state = {
+            toggle: this.props.toggle,
+            showLogOut: false,
+            userInfo: cookies.get('userInfo')
+        }
     }
 
+    // Changes className of btn to get active color
     setProductsActive = () => {
         this.setState({
             productsClass: true,
@@ -27,6 +29,8 @@ class Navbar extends React.Component {
         })
         this.props.changeNewToEditProduct(false);
     }
+
+    // Changes className of btn to get active color
     setExpencesActive = () => {
         this.setState({
             productsClass: false,
@@ -35,6 +39,7 @@ class Navbar extends React.Component {
         this.props.changeNewToEditProduct(false);
     }
 
+    // Show log out modal
     showLogOut = () => {
         this.setState({ showLogOut: !this.state.showLogOut })
     }
@@ -44,26 +49,28 @@ class Navbar extends React.Component {
             <React.Fragment>
                 {!cookies.get('jwt') ? <Redirect to='/' /> : null}
                 {this.state.showLogOut
-                    ? <LogOut showLogOut={this.showLogOut} />
-                    : null}
+                    ? <LogOut showLogOut={this.showLogOut} /> : 
+                null}
                 <div className="navbar-container">
                     <nav className="navbar">
                         <div className="button-container">
-                            <Link to='/products'>
-                                <button className={this.state.toggle ? "navbar-button active" : "navbar-button"} onClick={this.setProductsActive}>
+                            <Link to='/products' className='navbar-link'>
+                                <button className={this.state.toggle === 'products' ? "navbar-button active" : "navbar-button"} onClick={this.setProductsActive}>
                                     PRODUCTS
                                 </button>
                             </Link>
-                            <Link to='/expences'>
-                                <button className={!this.state.toggle ? "navbar-button active" : "navbar-button"} onClick={this.setExpencesActive}>
+                            <Link to='/expences' className='navbar-link'>
+                                <button className={this.state.toggle === 'expences' ? "navbar-button active" : "navbar-button"} onClick={this.setExpencesActive}>
                                     EXPENSES
                                 </button>
                             </Link>
                         </div>
-                        <div className="profile-container">
+                        <div className="profile-container" >
                             <img src={galgadot} alt="#" className="profile-picture" />
-                            <a href="#" className="user-name" onClick={this.showLogOut}>
-                                {cookies.get('name') + ' ' + cookies.get('lastName')}</a>
+                            <Link to='userinfo' className="user-name"> 
+                                {this.state.userInfo.name + ' ' + this.state.userInfo.lastName}
+                            </Link>
+                            <i className="fas fa-sign-out-alt" id='log-out-btn' onClick={this.showLogOut}></i>
                         </div>
                     </nav>
                 </div>

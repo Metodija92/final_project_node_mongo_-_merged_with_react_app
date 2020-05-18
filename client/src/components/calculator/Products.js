@@ -5,9 +5,14 @@ import { BrowserRouter as Router, Link } from 'react-router-dom'
 
 import Table from '../table/Table'
 import Alert from './Alert'
+import SelectUserOptions from '../SelectUserOptions/SelectUserOptions'
 
-import { changeNewToEditProduct, getProductsCall, getProductsSorted } from '../../redux/actions/productAction'
+import { changeNewToEditProduct, getProductsCall, getProductsSorted, getSubUser } from '../../redux/actions/productAction'
 import '../../assets/css/Products.css'
+
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 
 
 class Products extends React.Component {
@@ -17,7 +22,9 @@ class Products extends React.Component {
             showProducts: true,
             showAlert: false,
             didUpdate: this.props.didUpdate,
-            sort: "purchaseDate:desc"
+            sort: "purchaseDate:desc",
+            user_type: cookies.get('userInfo').user_type,
+            user_sort: cookies.get('userInfo').user_type
         }
     }
 
@@ -39,18 +46,29 @@ class Products extends React.Component {
         })
     }
 
+    // Check is admin user has sub-users and enables sort/filter by sub-user account
+    getUserForSort = (event) => {
+        this.setState({
+            user_sort: event.target.value,
+            didUpdate: true
+        })
+    }
+
     componentDidMount() {
-        this.props.getProductsCall();
+        if(this.state.user_type === 'admin') {
+            this.props.getSubUser();
+        }
+        this.props.getProductsCall(this.state.user_type);
         // Give time to Mongo to write data before going in update(Mongo returns OK while data in Quee to be written)
         setTimeout(() => {
             this.setState({ didUpdate: this.props.didUpdate })
         }, 500)
     }
 
-    // ***Triggers after deleting, editing or creating new product***
+    // Triggers after deleting, editing, sorting or creating new product
     componentDidUpdate() {
         if (this.state.didUpdate === true) {
-            this.props.getProductsSorted(this.state.sort);
+            this.props.getProductsSorted(this.state.sort, this.state.user_sort);
             this.setState({
                 didUpdate: false,
                 sort: "purchaseDate:desc"
@@ -66,11 +84,16 @@ class Products extends React.Component {
                     ? <Alert deleteAlert={this.deleteAlert} productDeleted={this.productDeleted} />
                     : null}
                 {/* *****Narednava linija ja renderira <Navbar/> a toggle mu treba za da se dodade klasa na kopceto Products da bide zeleno*****  */}
-                <this.props.component toggle={true} />
+                <this.props.component toggle={'products'} />
                 <div id="products">
                     <div id="products-header">
                         <h1>Products</h1>
-                        <p id="select-box-container">
+                        <p className="select-box-container">
+                            {this.state.user_type === 'admin' && this.props.subUsers ? 
+                                this.props.subUsers.length > 0 ?
+                                    <SelectUserOptions subUsers={this.props.subUsers} getUserForSort={this.getUserForSort} /> 
+                                : null
+                            : null}
                             <label htmlFor="purchase-filter">Sort by:</label>
                             <select name="purchase-filter" className="select-box" onChange={this.sortProduct}>
                                 <option value="purchaseDate:desc">Latest Purchase</option>
@@ -92,20 +115,24 @@ class Products extends React.Component {
 function mapStateToProps(state) {
     return {
         products: state.productsReducer.products,
-        didUpdate: state.productsReducer.didUpdate
+        didUpdate: state.productsReducer.didUpdate,
+        subUsers: state.productsReducer.subUsers
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        getProductsCall: () => {
-            dispatch(getProductsCall());
+        getProductsCall: (user_type) => {
+            dispatch(getProductsCall(user_type));
         },
         changeNewToEditProduct: (boolean) => {
             dispatch(changeNewToEditProduct(boolean));
         },
-        getProductsSorted: (sortQuery) => {
-            dispatch(getProductsSorted(sortQuery));
+        getProductsSorted: (sortQuery, user_type) => {
+            dispatch(getProductsSorted(sortQuery, user_type));
+        },
+        getSubUser: () => {
+            dispatch(getSubUser())
         }
     };
 }

@@ -5,6 +5,8 @@ import Products from './components/calculator/Products'
 import Navbar from './components/navbar/Navbar'
 import Expences from './components/calculator/Expences'
 import NewProduct from './components/newProduct/NewProduct'
+import ResetPasswordInputs from './components/home/ResetPasswordInputs'
+import UserInfo from './components/userInfo/UserInfo'
 
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
@@ -27,6 +29,8 @@ const Routes = () => {
                 <Route exact path='/expences' render={() => <Expences component={Navbar}/>}/>
                 <Route exact path='/newproduct' render={() => <NewProduct component={Navbar}/>}/>
                 <Route exact path='/editproduct' render={() => <NewProduct component={Navbar}/>}/>
+                <Route exact path='/userinfo' render={() => <UserInfo component={Navbar}/>}/>
+                <Route path='/resetpassword/:resethash/:email' component={ResetPasswordInputs} />
             </Switch>
         </Router>
     )

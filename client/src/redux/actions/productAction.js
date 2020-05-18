@@ -31,13 +31,10 @@ export function changeNewToEditProduct (newState) {
     }
 }
 
-export function editThisProduct 
-(id, productName, productType, productDescription, purchaseDate, productPrice) {
+export function editThisProduct (edit_this_product) {
     return {
         type: 'EDIT_THIS_PRODUCT',
-        payload: {
-            id, productName, productType, productDescription, purchaseDate, productPrice
-        }
+        payload: edit_this_product
     }
 }
 
@@ -45,58 +42,107 @@ export function editThisProduct
 // Thunk actions test
 
 export const userLoginIn = (email, password, history) => {
-    return async () => {
-        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/login', {
-            email: email,
-            password: password
+    return async (dispatch) => {
+        dispatch(userLoginStarted());
+        axios.post('/api/v1/auth/login', {
+            email,
+            password
         })
         .then(res=>{
-            // localStorage.setItem('jwt', res.data.jwt);
-            // localStorage.setItem('name', res.data.first_name);
-            // localStorage.setItem('lastName', res.data.last_name);
-            cookies.set('name', res.data.first_name);
-            cookies.set('lastName', res.data.last_name);
+            dispatch(userLoginSuccess());
+            cookies.set('userInfo', {
+                'name': res.data.first_name,
+                'lastName': res.data.last_name,
+                'email': res.data.email,
+                'status': res.data.status,
+                'birthday': res.data.birthday,
+                'country': res.data.country,
+                'telephone': res.data.telephone,
+                'user_type': res.data.user_type,
+                'user_id': res.data.user_id,
+                'supervisor_id': res.data.supervisor_id
+            });
             cookies.set('jwt', res.data.jwt);
         })
         .then(() => {
             history.push("/products")
         })
         .catch(err=>{
-            console.log(err)
+            dispatch(userLoginFailed());
+            console.log(err.response.data);
         });
     }
 }
 
-export const userRegister = (firstName, lastName, email, password, birthday, telephone, country, history) => {
+export const userRegister = (createUserData, history) => {
     return async (dispatch) => {
         dispatch(createUserStarted());
-        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/register', {
-            first_name: firstName,
-            last_name: lastName,
-            email: email,
-            password: password,
-            birthday: birthday,
-            telephone: telephone,
-            country: country,
+        axios.post('/api/v1/auth/register', {
+            ...createUserData,
+            user_type: 'admin',
             _created: new Date(),
         })
         .then(res => {
             setTimeout(() => {
-                dispatch(userLoginIn(email, password, history))
+                dispatch(userLoginIn(createUserData.email, createUserData.password, history))
                 dispatch(createUserSuccess());
             }, 1000);
         })
         .catch(err=>{
-            dispatch(createUserFailed());
+            dispatch(createUserFailed())
+            dispatch({
+                type: 'GET_ERROR_MESSAGE',
+                payload: err.response.data
+            })
+            // console.log(err.response.data)
+        });
+    }
+}
+
+export const subUserRegister = (createUserData) => {
+    return async (dispatch) => {
+        dispatch(createUserStarted());
+        axios.post('/api/v1/auth/register', {
+            ...createUserData,
+            user_type: 'user',
+            _created: new Date(),
+        })
+        .then(res => {
+            setTimeout(() => {
+                dispatch(createUserSuccess());
+            }, 1000);
+        })
+        .catch(err=>{
+            dispatch(createUserFailed())
+            dispatch({
+                type: 'GET_ERROR_MESSAGE',
+                payload: err.response.data
+            })
+            // console.log(err.response.data)
+        });
+    }
+}
+
+export const getSubUser = () => {
+    return async (dispatch) => {
+        axios.get('/api/v1/auth/find-users', 
+        { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
+        .then(res => {
+            dispatch({
+                type: 'GET_SUB_USER',
+                payload: res.data
+            })
+        })
+        .catch(err => {
             console.log(err)
         });
     }
 }
 
-export const getProductsCall = () => {
+export const getProductsCall = (user_type) => {
     return async (dispatch) => {
-        dispatch(getAllPostsStarted());
-        axios.get("https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=purchaseDate:desc", 
+        dispatch(getAllProductsStarted());
+        axios.get(`/api/v1/products/?sort=purchaseDate:desc&user_type=${user_type}`, 
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -105,16 +151,16 @@ export const getProductsCall = () => {
             });
         })
         .catch(err=>{
-            dispatch(getAllPostsFailed());
+            dispatch(getAllProductsFailed());
             console.log(err);
         })
     }
 }
 
-export const getProductsSorted = (sortQuery) => {
+export const getProductsSorted = (sortQuery, user_type) => {
     return async (dispatch) => {
-        dispatch(getAllPostsStarted());
-        axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?sort=${sortQuery}`,
+        dispatch(getAllProductsStarted());
+        axios.get(`/api/v1/products/?sort=${sortQuery}&user_type=${user_type}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -127,16 +173,17 @@ export const getProductsSorted = (sortQuery) => {
             });
         })
         .catch(err=>{
-            dispatch(getAllPostsFailed());
+            dispatch(getAllProductsFailed());
             console.log(err)
         });
     }
 }
 
-export const getExpencesFiltered = (from, to) => {
+
+export const getExpencesFiltered = (from, to, user_type) => {
     return async (dispatch) => {
-        dispatch(getAllPostsStarted());
-        axios.get(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc`,
+        dispatch(getAllProductsStarted());
+        axios.get(`/api/v1/products/?date_from=${from}&date_to=${to}&sort=purchaseDate:desc&user_type=${user_type}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res=>{
             dispatch({
@@ -145,21 +192,17 @@ export const getExpencesFiltered = (from, to) => {
             });
         })
         .catch(err=>{
-            dispatch(getAllPostsFailed());
+            dispatch(getAllProductsFailed());
             console.log(err)
         })
     }
 }
 
-export const createNewProduct = (name, type, description, date, price) => {
+export const createNewProduct = (newProduct) => {
     return async (dispatch) => {
         dispatch(createOrEditStarted());
-        axios.post('https://desolate-escarpment-53492.herokuapp.com/api/v1/products/', {
-            productName: name,
-            productType: type,
-            productDescription: description,
-            purchaseDate: date,
-            productPrice: price,
+        axios.post('/api/v1/products/', {
+            ...newProduct,
             _created: new Date()
         }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
@@ -177,15 +220,11 @@ export const createNewProduct = (name, type, description, date, price) => {
     }
 }
 
-export const editExistingProduct = (id, name, type, description, date, price) => {
+export const editExistingProduct = (id, edit_product) => {
     return async (dispatch) => {
         dispatch(createOrEditStarted());
-        axios.put(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${id}`, {
-            productName: name,
-            productType: type,
-            productDescription: description,
-            purchaseDate: date,
-            productPrice: price,
+        axios.put(`/api/v1/products/${id}`, {
+            ...edit_product,
             _modified: new Date()
         }, { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
@@ -210,7 +249,7 @@ export const editExistingProduct = (id, name, type, description, date, price) =>
 
 export const deleteProduct = (id) => {
     return async () => {
-        axios.delete(`https://desolate-escarpment-53492.herokuapp.com/api/v1/products/${id}`,
+        axios.delete(`/api/v1/products/${id}`,
         { headers: {"Authorization" : `Bearer ${cookies.get('jwt')}`}})
         .then(res => {
             // console.log(res);
@@ -218,6 +257,24 @@ export const deleteProduct = (id) => {
         .catch(err => {
             console.log(err);
         });
+    }
+}
+
+const userLoginStarted = () => {
+    return {
+        type: 'USER_LOGIN_STARTED'
+    }
+}
+
+const userLoginFailed = () => {
+    return {
+        type: 'USER_LOGIN_FAILED'
+    }
+}
+
+const userLoginSuccess = () => {
+    return {
+        type: 'USER_LOGIN_SUCCESS'
     }
 }
 
@@ -239,15 +296,15 @@ const createUserSuccess = () => {
     }
 }
 
-const getAllPostsStarted = () => {
+const getAllProductsStarted = () => {
     return {
-        type: 'GET_ALL_POSTS_STARTED'
+        type: 'GET_ALL_PRODUCTS_STARTED'
     }
 }
 
-const getAllPostsFailed = () => {
+const getAllProductsFailed = () => {
     return {
-        type: 'GET_ALL_POSTS_FAILED'
+        type: 'GET_ALL_PRODUCTS_FAILED'
     }
 }
 
