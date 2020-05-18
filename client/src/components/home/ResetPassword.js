@@ -15,7 +15,7 @@ const ResetPassword = (props) => {
 
     // Send reset link to email
     const sendResetLink = () => {
-        axios.post('http://localhost:8081/api/v1/auth/reset-link',  {email: email})
+        axios.post('/api/v1/auth/reset-link',  {email: email})
         .then(() => {
             showMsg(false);
             setLink(true);

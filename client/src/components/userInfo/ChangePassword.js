@@ -32,7 +32,7 @@ const ChangePassword = (props) => {
 
     const changeUserPassword = () => {
         if(pass1 === pass2) {
-            axios.post('http://localhost:8081/api/v1/auth/change-password', {
+            axios.post('/api/v1/auth/change-password', {
                 oldPass: oldPass,
                 pass1: pass1,
                 pass2: pass2,

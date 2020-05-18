@@ -80,7 +80,7 @@ class UserInfo extends React.Component {
 
     updateUserInfo = () => {
         console.log(this.state.first_name)
-        axios.patch('http://localhost:8081/api/v1/auth/update-user-info', {
+        axios.patch('/api/v1/auth/update-user-info', {
                 first_name: this.state.first_name,
                 last_name: this.state.last_name,
                 email: this.state.email,
