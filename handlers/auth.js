@@ -42,7 +42,7 @@ const register = (req, res) => {
                             from: 'metodijalichovski@gmail.com',
                             subject: 'Testing the SENDGRID',
                             text: 'Thanks for registrating',
-                            html: `<a href="http://localhost:8081/api/v1/auth/confirm/${confirm_hash}">Click here to confirm you account</a>`,
+                            html: `<a href="https://desolate-escarpment-53492.herokuapp.com/api/v1/auth/confirm/${confirm_hash}">Click here to confirm you account</a>`,
                             };
                             sgMail.send(msg);
                             return ;
@@ -133,10 +133,10 @@ const resetLink = (req, res) => {
                     let msg = {
                     to: req.body.email,
                     from: 'metodijalichovski@gmail.com',
-                    subject: 'Testing the RESET LINK',
-                    text: 'GET RESET HASH',
+                    subject: 'Expence Calculator Reset Link',
+                    text: 'Your password reset link',
                     // Tuka treba link do druga komponenta kade sto ke se vnese nov pass i posle post povik da se zapise noviot pass
-                    html: `<a href="http://localhost:3000/resetpassword/${reset_hash}/${req.body.email}">${reset_hash} - Click here to reset your password</a>`,
+                    html: `<a href="https://desolate-escarpment-53492.herokuapp.com/resetpassword/${reset_hash}/${req.body.email}">${reset_hash} - Click here to reset your password</a>`,
                     };
                     sgMail.send(msg);
                 return res.status(200).send('ok');
