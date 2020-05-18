@@ -1,14 +1,25 @@
 import React from 'react'
 import { withRouter } from "react-router-dom"
 import { connect } from 'react-redux'
-// import { Redirect } from 'react-router-dom'
+import ResetPassword from './ResetPassword'
 import { userLoginIn } from '../../redux/actions/productAction'
+import Modal from 'react-modal';
+import ReactLoading from 'react-loading';
 
 import '../../assets/css/Login.css'
 
-import Cookies from 'universal-cookie';
-const cookies = new Cookies();
 
+const customStyles = {
+    content : {
+      top                   : '50%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+      transform             : 'translate(-50%, -50%)'
+    }
+};
+Modal.setAppElement('#root')
 
 class Login extends React.Component {
     constructor() {
@@ -16,7 +27,7 @@ class Login extends React.Component {
         this.state = {
             email: null,
             password: null,
-            redirect: false
+            isOpen: false
         }
     }
 
@@ -25,15 +36,7 @@ class Login extends React.Component {
         this.setState({ [event.target.id]: event.target.value })
     }
 
-    // Redirects user to Products page if authentication is successfull
-    // ***Cant be used when redirecting from thunk actions,
-    // instead use withRouter() to export history and history.push() in thunk action***
-    // renderRedirect = () => {
-    //     if (this.state.redirect) {
-    //         return <Redirect to='/products' />
-    //     }
-    // }
-
+    // Auth call to check email/password and redirect if true
     logIn = (event) => {
         event.preventDefault();
         this.props.userLoginIn(
@@ -41,19 +44,21 @@ class Login extends React.Component {
             this.state.password,
             this.props.history
         );
-        cookies.set('cookieTest', 'Kolache');
+    }
+
+    // Open reset password modal
+    resetModal = () => {
+        this.setState({isOpen: !this.state.isOpen})
     }
 
     render() {
         return (
             <React.Fragment>
-                {/* {this.renderRedirect()} */}
                 <div id="login">
 
                     <div className="box-container" id="login-container">
                         <form action="">
                             <p className="input-container">
-                                {/* Vo label fali for="" zaso react vo console go dava kao error, dali treba da bide htmlFor ?*/}
                                 <label className="text-field-label" >E-mail</label> <br />
                                 <input type="email" className="text-field-input" id='email' onChange={this.saveInputValue} />
                             </p>
@@ -62,7 +67,20 @@ class Login extends React.Component {
                                 <input type="password" className="text-field-input" id='password' onChange={this.saveInputValue} />
                             </p>
                             <button className="primary-button long" onClick={this.logIn}>SIGN IN</button>
+                            {this.props.userLoginFailed ? 
+                                <p id='wrong-user-info'>Wrong E-mail or password, please try again</p> 
+                            : null}
                         </form>
+                        {this.props.userLoginStarted ?
+                            <ReactLoading type={'spin'} color={'#0abf34'} height={'10%'} width={'10%'} className={'spinner'} />
+                        : null}
+                        <p id='reset-link'>
+                            Can't remember your password ? 
+                            <button id='reset-link-button' onClick={this.resetModal}>Click here</button>
+                        </p>
+                        <Modal isOpen={this.state.isOpen} style={customStyles}>
+                            <ResetPassword resetModal={this.resetModal}/>
+                        </Modal>
                     </div>
 
                     <div className="aditional-info" id="aditional-info-login">
@@ -78,6 +96,13 @@ class Login extends React.Component {
 
 }
 
+function mapStateToProps(state) {
+    return {
+        userLoginStarted: state.productsReducer.userLoginStarted,
+        userLoginFailed: state.productsReducer.userLoginFailed
+    }
+}
+
 function mapDispatchToProps(dispatch) {
     return {
         userLoginIn: (email, password, history) => {
@@ -86,4 +111,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(null, mapDispatchToProps)(withRouter(Login))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login))

@@ -1,15 +1,19 @@
 const initialUserState = {
     products: [],
     productToEdit: [],
+    subUsers: [],
     showEditProduct: false,
     didUpdate: false,
     jwt: null,
-    getAllPostsStarted: false,
-    getAllPostsFailed: false,
+    getAllProductsStarted: false,
+    getAllProductsFailed: false,
     createOrEditStarted: false,
     createOrEditFailed: false,
     createUserStarted: false,
-    createUserFailed: false
+    createUserFailed: false,
+    userLoginStarted: false,
+    userLoginFailed: false,
+    errorMessage: ''
 }
 
 export function productsReducer (state = initialUserState, action) {
@@ -18,6 +22,33 @@ export function productsReducer (state = initialUserState, action) {
             return {
                 ...state,
                 jwt: action.payload
+            }
+        }
+        case 'GET_ERROR_MESSAGE' : {
+            return {
+                ...state,
+                errorMessage: action.payload
+            }
+        }
+        case 'USER_LOGIN_STARTED' : {
+            return {
+                ...state,
+                userLoginStarted: true,
+                userLoginFailed: false
+            }
+        }
+        case 'USER_LOGIN_FAILED' : {
+            return {
+                ...state,
+                userLoginStarted: false,
+                userLoginFailed: true
+            }
+        }
+        case 'USER_LOGIN_SUCCESS' : {
+            return {
+                ...state,
+                userLoginStarted: false,
+                userLoginFailed: false
             }
         }
         case 'CREATE_USER_STARTED' : {
@@ -41,26 +72,32 @@ export function productsReducer (state = initialUserState, action) {
                 createUserFailed: false
             }
         }
+        case 'GET_SUB_USER' : {
+            return {
+                ...state,
+                subUsers: action.payload
+            }
+        }
         case 'GET_PRODUCTS' : {
             return {
                 ...state,
-                getAllPostsStarted: false,
-                getAllPostsFailed: false,
+                getAllProductsStarted: false,
+                getAllProductsFailed: false,
                 products: action.payload
             }
         }
-        case 'GET_ALL_POSTS_STARTED' : {
+        case 'GET_ALL_PRODUCTS_STARTED' : {
             return {
                 ...state,
-                getAllPostsStarted: true,
-                getAllPostsFailed: false
+                getAllProductsStarted: true,
+                getAllProductsFailed: false
             }
         }
-        case 'GET_ALL_POSTS_FAILED' : {
+        case 'GET_ALL_PRODUCTS_FAILED' : {
             return {
                 ...state,
-                getAllPostsStarted: false,
-                getAllPostsFailed: true
+                getAllProductsStarted: false,
+                getAllProductsFailed: true
             }
         }
         case 'CREATE_OR_EDIT_PRODUCT_STARTED' : {
@@ -99,12 +136,7 @@ export function productsReducer (state = initialUserState, action) {
         case 'EDIT_THIS_PRODUCT' : {
             return {
                 ...state,
-                productToEdit: [{id: action.payload.id,
-                    productName: action.payload.productName,
-                    productType: action.payload.productType,
-                    productDescription: action.payload.productDescription,
-                    purchaseDate: action.payload.purchaseDate,
-                    productPrice: action.payload.productPrice}]
+                productToEdit: [action.payload]
             }
         }
         default: {

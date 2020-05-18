@@ -10,3 +10,34 @@
     width: 300px;
     height: 300px;
 }
+
+#reset-link {
+    color: #8D8D8D;
+    font-size: 10px;
+    text-align: center;
+}
+
+#reset-link-button {
+    color: #8D8D8D;
+    font-size: 10px;
+    border: none;
+    background: transparent;
+    outline-color: transparent;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#wrong-user-info {
+    margin: 0;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    color: #ef0815;
+}
+
+/* Testing for the modal */
+
+.modal-size {
+    height: 200px;
+    width: 200px;
+}

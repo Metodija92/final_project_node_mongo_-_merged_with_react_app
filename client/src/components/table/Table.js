@@ -1,7 +1,16 @@
 import React from 'react'
 import TbodyData from './TbodyData'
 
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 class Table extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            user_type: cookies.get('userInfo').user_type
+        }
+    }
     
     render() {
         return (
@@ -14,7 +23,9 @@ class Table extends React.Component {
                             <th>Product Description</th>
                             <th>Purchase Date</th>
                             <th>Product Price</th>
-                            {this.props.showProducts ? <th>Edit / Delete</th> : null}
+                            {this.props.showProducts ? 
+                                <th>Edit {this.state.user_type === 'admin' ? '/ Delete' : null}</th> 
+                            : null}
                         </tr>
                     </thead>
                     <tbody className="products-table-body">

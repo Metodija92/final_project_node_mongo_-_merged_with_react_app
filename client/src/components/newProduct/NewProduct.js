@@ -6,6 +6,9 @@ import { createNewProduct, editExistingProduct } from '../../redux/actions/produ
 
 import '../../assets/css/NewProduct.css'
 
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 class NewProduct extends React.Component {
     constructor(props) {
         super(props)
@@ -15,7 +18,9 @@ class NewProduct extends React.Component {
             productType: this.props.showEditProduct ? this.props.productToEdit.productType : null,
             productDescription: this.props.showEditProduct ? this.props.productToEdit.productDescription : null,
             purchaseDate: this.props.showEditProduct ? this.props.productToEdit.purchaseDate : null,
-            productPrice: this.props.showEditProduct ? this.props.productToEdit.productPrice : null
+            productPrice: this.props.showEditProduct ? this.props.productToEdit.productPrice : null,
+            user_type: cookies.get('userInfo').user_type,
+            supervisor_id: cookies.get('userInfo').supervisor_id
         }
     }
 
@@ -35,12 +40,18 @@ class NewProduct extends React.Component {
             event.preventDefault()
             alert('Please fill out all the fields')
         } else {// Create product axios call
-            this.props.createNewProduct(
-                this.state.productName,
-                this.state.productType,
-                this.state.productDescription,
-                this.state.purchaseDate,
-                this.state.productPrice);
+            let newProduct ={
+                productName: this.state.productName,
+                productType: this.state.productType,
+                productDescription: this.state.productDescription,
+                purchaseDate: this.state.purchaseDate,
+                productPrice: this.state.productPrice
+            }
+            if(this.state.user_type === 'admin') {
+                this.props.createNewProduct(newProduct);
+            } else {
+                this.props.createNewProduct({...newProduct, supervisor_id: this.state.supervisor_id})
+            }
         }
     }
 
@@ -55,13 +66,14 @@ class NewProduct extends React.Component {
             alert('All fields must be filled out')
             event.preventDefault()
         } else { // Edit product axios call
-            this.props.editExistingProduct(
-                this.props.productToEdit.id,
-                this.state.productName,
-                this.state.productType,
-                this.state.productDescription,
-                this.state.purchaseDate,
-                this.state.productPrice);
+            let edit_product = {
+                productName: this.state.productName,
+                productType: this.state.productType,
+                productDescription: this.state.productDescription,
+                purchaseDate: this.state.purchaseDate,
+                productPrice: this.state.productPrice
+            }
+            this.props.editExistingProduct(this.props.productToEdit.id, edit_product);
         }
     }
 
@@ -69,7 +81,7 @@ class NewProduct extends React.Component {
         return (
             <React.Fragment>
                 {/* *****Narednava linija ja renderira <Navbar/> a toggle mu treba za da se dodade klasa na kopceto Products da bide zeleno*****  */}
-                <this.props.component toggle={true} />
+                <this.props.component toggle={'products'} />
                 <div id="newproduct-header">
                     <h1>New Product</h1>
                 </div>
@@ -154,11 +166,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        createNewProduct: (name, type, description, date, price) => {
-            dispatch(createNewProduct(name, type, description, date, price));
+        createNewProduct: (newProduct) => {
+            dispatch(createNewProduct(newProduct));
         },
-        editExistingProduct: (id, name, type, description, date, price) => {
-            dispatch(editExistingProduct(id, name, type, description, date, price));
+        editExistingProduct: (id, edit_product) => {
+            dispatch(editExistingProduct(id, edit_product));
         }
     };
 }

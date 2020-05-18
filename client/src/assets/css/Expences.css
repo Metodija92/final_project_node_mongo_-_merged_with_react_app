@@ -49,7 +49,7 @@
     outline: 0;
 } */
 
-#select-box-container {
+.select-box-container {
     color: #575757;
     margin-left: 25px;
     display: flex;
@@ -57,7 +57,7 @@
     margin-bottom: auto;
 }
 
-#select-box-container label {
+.select-box-container label {
     margin-top: auto;
     margin-bottom: auto;
 }

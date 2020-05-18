@@ -1,15 +1,30 @@
 import React from 'react'
 import { withRouter } from "react-router-dom"
 import { connect } from 'react-redux'
-import { userRegister } from '../../redux/actions/productAction'
+import { userRegister, subUserRegister } from '../../redux/actions/productAction'
+import RegisterErrorModal from './RegisterErrorModal'
 
 import '../../assets/css/Register.css'
 
 import ReactLoading from 'react-loading';
+import Modal from 'react-modal';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+const customStyles = {
+    content : {
+      top                   : '50%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+      transform             : 'translate(-50%, -50%)'
+    }
+};
 
 class Register extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             first_name: null,
             last_name: null,
@@ -18,7 +33,9 @@ class Register extends React.Component {
             birthday: null,
             telephone: null,
             country: null,
-            redirect: false
+            loggedIn: this.props.loggedIn,
+            registerErrorModal: false,
+            registerErrorMessage: ''
         }
     }
 
@@ -27,6 +44,17 @@ class Register extends React.Component {
         this.setState({ [event.target.id]: event.target.value })
     }
 
+    // When rendered in 'user info' for creating a sub-user, closes the modal on Cancel btn click
+    closeUserInfoModal = (event) => {
+        event.preventDefault()
+        this.props.closeRegisterModal()
+    }
+
+    closeRegisterErrorModal = () => {
+        this.setState({registerErrorModal: false})
+    }
+
+    // Register new user call (with minor field validaiton)
     registerUser = (event) => {
         if (this.state.first_name === null ||
             this.state.last_name === null ||
@@ -39,15 +67,43 @@ class Register extends React.Component {
             alert('Please fill out all the fields')
         } else {
             event.preventDefault()
-            this.props.userRegister(
-                this.state.first_name,
-                this.state.last_name,
-                this.state.email.toLowerCase(),
-                this.state.password,
-                this.state.birthday,
-                this.state.telephone,
-                this.state.country,
-                this.props.history);
+            let createUserData = {
+                first_name: this.state.first_name,
+                last_name: this.state.last_name,
+                email: this.state.email.toLowerCase(),
+                password: this.state.password,
+                birthday: this.state.birthday,
+                telephone: this.state.telephone,
+                country: this.state.country
+            }
+            if(!this.state.loggedIn) {
+                this.props.userRegister(createUserData, this.props.history)
+                setTimeout(() => {
+                    if(this.props.createUserFailed) {
+                        // console.log(this.props.promiseErrorMessage);
+                        this.setState({
+                            registerErrorModal: true,
+                            registerErrorMessage: this.props.promiseErrorMessage
+                        });
+                        console.log(this.state.registerErrorMessage);
+                        return;
+                    }
+                }, 500)
+            } else {
+                this.props.subUserRegister({...createUserData, supervisor_id: cookies.get('userInfo').user_id})
+                setTimeout(() => {
+                    if(this.props.createUserFailed) {
+                        // console.log(this.props.promiseErrorMessage);
+                        this.setState({
+                            registerErrorModal: true,
+                            registerErrorMessage: this.props.promiseErrorMessage
+                        });
+                        console.log(this.state.registerErrorMessage);
+                        return;
+                    }
+                    this.props.closeRegisterModal()
+                }, 500)
+            }  
         }
     }
 
@@ -88,17 +144,24 @@ class Register extends React.Component {
                             </p>
 
                             <button className="primary-button long" type="submit" onClick={this.registerUser}>REGISTER</button>
+                            {this.state.loggedIn ? 
+                                <button className="primary-button long" onClick={this.closeUserInfoModal}>CANCEL</button> 
+                            : null}
                         </form>
+                        <Modal isOpen={this.state.registerErrorModal} style={customStyles}>
+                            <RegisterErrorModal closeModal={this.closeRegisterErrorModal}
+                            errorMessage={this.state.registerErrorMessage}/>
+                        </Modal>
                         {this.props.createUserStarted ?
                             <ReactLoading type={'spin'} color={'#0abf34'} height={'10%'} width={'10%'} className={'spinner'} />
-                            : null}
+                        : null}
                     </div>
 
-                    <div className="aditional-info">
+                    {!this.state.loggedIn ? <div className="aditional-info">
                         <p>Or if you already have an account,
                             <button onClick={this.props.registerAccount} className="register-login">Sign In</button>.
                         </p>
-                    </div>
+                    </div> : null}
                 </div>
             </React.Fragment>
         )
@@ -108,14 +171,19 @@ class Register extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        createUserStarted: state.productsReducer.createUserStarted
+        createUserStarted: state.productsReducer.createUserStarted,
+        createUserFailed: state.productsReducer.createUserFailed,
+        promiseErrorMessage: state.productsReducer.errorMessage
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        userRegister: (name, lastName, mail, password, birthday, phone, country, history) => {
-            dispatch(userRegister(name, lastName, mail, password, birthday, phone, country, history));
+        userRegister: (createUserData, history) => {
+            dispatch(userRegister(createUserData, history));
+        },
+        subUserRegister: (createUserData) => {
+            dispatch(subUserRegister(createUserData));
         }
     };
 }
